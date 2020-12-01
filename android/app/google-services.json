@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "662256136925",
+    "firebase_url": "https://gigmate-77896.firebaseio.com",
+    "project_id": "gigmate-77896",
+    "storage_bucket": "gigmate-77896.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662256136925:android:45ab673ccdb763e0de6134",
+        "android_client_info": {
+          "package_name": "akkensoft.gigmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662256136925-emcn4mv1219pac248135momv0fkhhd1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1g2-Vmi29AnOGJoSAiCT5Fop8EkQXK9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662256136925-emcn4mv1219pac248135momv0fkhhd1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
