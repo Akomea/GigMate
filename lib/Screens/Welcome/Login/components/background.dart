@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gigmate/components/bottom_error_message.dart';
+import 'package:gigmate/Screens/Welcome/Main/pin_verification_screen.dart';
 import 'package:gigmate/enum/connectivity_status.dart';
+import 'package:gigmate/user_auth.dart';
 import 'package:provider/provider.dart';
 
 class Background extends StatefulWidget {
@@ -20,6 +21,7 @@ class _BackgroundState extends State<Background> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    PinCodeVerificationScreen.smsCodeHasError = true;
     controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 5),
@@ -46,6 +48,14 @@ class _BackgroundState extends State<Background> with TickerProviderStateMixin {
     // TODO: implement didChangeDependencies
     connectionStatus = Provider.of<ConnectivityStatus>(context, listen: true);
     print('connection status2: $connectionStatus');
+    // if (connectionStatus == null) {
+    //   if (connectionStatus == ConnectivityStatus.Offline) {
+    //     Provider.of<UserAuth>(context).toggleOfflineMessageVisibility(true);
+    //   } else {
+    //     Provider.of<UserAuth>(context).toggleOfflineMessageVisibility(false);
+    //   }
+    // }
+
     super.didChangeDependencies();
   }
 
@@ -59,16 +69,7 @@ class _BackgroundState extends State<Background> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     print('connection status3: $connectionStatus');
-    if (connectionStatus == ConnectivityStatus.Offline ||
-        connectionStatus == null) {
-      setState(() {
-        showErrorMessage = true;
-      });
-    } else {
-      setState(() {
-        showErrorMessage = false;
-      });
-    }
+    UserAuth myUserAuth = Provider.of<UserAuth>(context);
 
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -90,10 +91,6 @@ class _BackgroundState extends State<Background> with TickerProviderStateMixin {
             width: size.width * 0.3 + (animation.value * 20),
           ),
           widget.child,
-          Visibility(
-            visible: showErrorMessage,
-            child: BottomErrorMessage(),
-          ),
         ],
       ),
     );

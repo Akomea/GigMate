@@ -7,7 +7,6 @@ import 'package:gigmate/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   static final screenId = 'home_screen';
-  FirebaseAuth auth = FirebaseAuth.instance;
 
   // final String user;
 
@@ -31,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     //String userCredential = this.widget.user;
+    FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       bottomNavigationBar: AnimatedBottomNavigationBar(
         activeColor: kPrimaryColour,
@@ -65,9 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('Home Screen'),
                   RaisedButton(
                     onPressed: () async {
-                      await widget.auth.signOut();
-                      Navigator.popAndPushNamed(
-                          context, WelcomeScreen.screenId);
+                      await auth.signOut();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WelcomeScreen()));
                     },
                     child: Text('Logout'),
                   ),
