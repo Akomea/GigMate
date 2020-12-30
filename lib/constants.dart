@@ -8,14 +8,34 @@ const kInactiveColour = Color(0xff997d99);
 const kOfflineErrorMessage = 'The internet connection appears to be offline';
 const kInvalidPhoneErrorMessage = 'Oops...invalid phone number format :(';
 const kIncorrectCodeErrorMessage = 'Oops...the sms code is incorrect :(';
-
+const List<BoxShadow> kShadow = [
+  BoxShadow(blurRadius: 5, spreadRadius: 3, color: kShadowColour)
+];
+const List<BoxShadow> kTextFieldContainerShadow = [
+  BoxShadow(blurRadius: 5, spreadRadius: 1, color: Color(0xffede9f0))
+];
 const kHeaderStyle = TextStyle(
   fontFamily: 'Playfair',
   fontSize: 25.0,
   color: kPrimaryColour,
 );
+const kQuestionStyle = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 14,
+    fontFamily: 'Roboto',
+    color: kPurpleTextColour);
+
+const kHeaderStyle2 = TextStyle(
+    fontFamily: 'Playfair',
+    fontWeight: FontWeight.w500,
+    color: kPurpleTextColour);
+const kHeaderStyle3 = TextStyle(
+    fontFamily: 'Playfair', fontWeight: FontWeight.w500, color: kPrimaryColour);
+
 const kPurpleTextColour = Color(0xff270040);
+const kShadowColour = Color(0xffd4d0d6);
 const kErrorTextColour = Color(0xffc2327c);
+const kHintTextColour = Color(0x80270040);
 
 const kBoldLinkText =
     TextStyle(color: kPrimaryColour, fontWeight: FontWeight.bold, fontSize: 15);

@@ -232,9 +232,7 @@ class _LoginBodyState extends State<LoginBody> {
     } else {
       Provider.of<UserAuth>(context).toggleOfflineMessageVisibility(false);
     }
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Consumer<UserAuth>(
       builder: (context, myUserAuth, child) {
         return Background(
@@ -309,7 +307,7 @@ class _LoginBodyState extends State<LoginBody> {
                                 myUserAuth.toggleHasError(false);
                               }
                               if (_focus.hasFocus &&
-                                  _phoneController.text == '' ||
+                                      _phoneController.text == '' ||
                                   _phoneController.text == null) {
                                 myUserAuth.toggleHasError(true);
                                 myUserAuth.toggleOpacity(0.5);
@@ -376,10 +374,7 @@ class _LoginBodyState extends State<LoginBody> {
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .viewInsets
-                      .bottom,
+                  height: MediaQuery.of(context).viewInsets.bottom,
                 ),
                 Visibility(
                   visible: myUserAuth.offlineMessageVisibility,

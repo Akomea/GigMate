@@ -2,14 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
 import 'package:gigmate/Screens/Welcome/welcome_screen.dart';
+import 'package:gigmate/post_gig_notifier.dart';
 import 'package:gigmate/services/connectivity_service.dart';
-import 'package:gigmate/user_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'Screens/Welcome/Main/home_screen.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'constants.dart';
 import 'enum/connectivity_status.dart';
+import 'user_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => UserAuth(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => PostGigNotifier(),
+        ),
         StreamProvider<ConnectivityStatus>(
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,
@@ -35,9 +39,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'GigMate',
         theme: ThemeData(
-          primaryColor: kPrimaryColour,
-          scaffoldBackgroundColor: Colors.white,
-        ),
+            primaryColor: kPrimaryColour,
+            scaffoldBackgroundColor: Colors.white,
+            accentColor: kAccent,
+            textTheme: TextTheme(
+                bodyText2: TextStyle(
+                    fontFamily: 'Roboto',
+                    color: Colors.black.withOpacity(0.6)))),
         initialRoute: WelcomeScreen.screenId,
         routes: {
           WelcomeScreen.screenId: (context) => WelcomeScreen(),

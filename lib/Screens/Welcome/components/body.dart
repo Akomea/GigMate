@@ -1,10 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
+//import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
 import 'package:gigmate/constants.dart';
 
 import '../../../components/headlineText.dart';
 import '../../../components/normal_roundedbutton.dart';
+import '../Main/home_screen.dart';
 import 'background.dart';
 
 class Body extends StatelessWidget {
@@ -36,8 +37,9 @@ class Body extends StatelessWidget {
               bgColour: kSecondaryColour,
               buttonText: 'Get Started',
               textColour: kPurpleTextColour,
-              onPressed: () => {
-                Navigator.popAndPushNamed(context, LoginScreen.screenId),
+              onPressed: () =>
+              {
+                Navigator.popAndPushNamed(context, HomeScreen.screenId),
               },
             ),
           ),

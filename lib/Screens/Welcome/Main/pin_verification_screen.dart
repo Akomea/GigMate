@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
 import 'package:gigmate/components/error_message.dart';
@@ -9,9 +10,10 @@ import 'package:gigmate/components/pill_button.dart';
 import 'package:gigmate/components/special_roundedbutton.dart';
 import 'package:gigmate/constants.dart';
 import 'package:gigmate/mutable_icon.dart';
-import 'package:gigmate/user_auth.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+
+import '../../../user_auth.dart';
 
 class PinCodeVerificationScreen extends StatefulWidget {
   static bool smsCodeHasError = false;
@@ -217,7 +219,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     Visibility(
                       visible: isCountdownTimerVisible,
                       child: CountdownTimer(
-                        endTime: endTime,
+                        controller: CountdownTimerController(endTime: endTime),
                         widgetBuilder: (context, remainingTime) {
                           if (remainingTime != null) {
                             String numOfSec = remainingTime.sec.toString();
