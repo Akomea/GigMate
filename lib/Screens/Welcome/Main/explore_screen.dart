@@ -9,6 +9,7 @@ import 'package:gigmate/components/gig_card.dart';
 import 'package:gigmate/components/persistent_search_bar.dart';
 
 import '../../../constants.dart';
+import 'detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -55,15 +56,21 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GigCard(
-                            size: _size,
-                            imageUrl: 'assets/images/kwanpa.jpg',
-                            cardTitle: 'Kwan Pa',
-                            description: 'An indigenous band that performs '
-                                'and promotes the Palmwine music of Ghana in various forms',
-                            location: 'Accra',
-                            rating: 4.5,
-                            budget: '\$\$\$\$\$',
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, DetailScreen.screenId);
+                            },
+                            child: GigCard(
+                              size: _size,
+                              imageUrl: 'assets/images/kwanpa.jpg',
+                              cardTitle: 'Kwan Pa',
+                              description: 'An indigenous band that performs '
+                                  'and promotes the Palmwine music of Ghana in various forms',
+                              location: 'Accra',
+                              rating: 4.5,
+                              budget: '\$\$\$\$\$',
+                            ),
                           ),
                           GigCard(
                             size: _size,

@@ -16,13 +16,16 @@ class PillButton extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: Container(
+            padding: EdgeInsets.symmetric(vertical: 2),
             width: MediaQuery.of(context).size.width * 0.4,
             height: 20.0,
             color: kSecondaryColour,
             child: Center(
-              child: Text(
-                buttonText,
-                style: TextStyle(color: kPrimaryColour, fontFamily: 'OpenSans'),
+              child: FittedBox(
+                child: Text(
+                  buttonText,
+                  style: TextStyle(color: kAccent, fontFamily: 'OpenSans'),
+                ),
               ),
             ),
           ),

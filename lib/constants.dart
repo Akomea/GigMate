@@ -14,6 +14,11 @@ const List<BoxShadow> kShadow = [
 const List<BoxShadow> kTextFieldContainerShadow = [
   BoxShadow(blurRadius: 5, spreadRadius: 1, color: Color(0xffede9f0))
 ];
+const List<BoxShadow> kShadow2 = [
+  BoxShadow(blurRadius: 5, spreadRadius: 1, color: Color(0xffc7c7c7))
+];
+
+const List<BoxShadow> kNoShadow = [];
 const kHeaderStyle = TextStyle(
   fontFamily: 'Playfair',
   fontSize: 25.0,
@@ -24,7 +29,8 @@ const kQuestionStyle = TextStyle(
     fontSize: 14,
     fontFamily: 'Roboto',
     color: kPurpleTextColour);
-
+const kNotifiedTextStyle =
+    TextStyle(color: kAccent, fontWeight: FontWeight.bold);
 const kHeaderStyle2 = TextStyle(
     fontFamily: 'Playfair',
     fontWeight: FontWeight.w500,
@@ -48,3 +54,5 @@ const kHintTextDecoration = InputDecoration(
     hintStyle: TextStyle(
       color: Color(0x80270040),
     ));
+const double kBudgetButtonHeight = 0.055;
+const double kBudgetButtonWidth = 0.13;

@@ -9,6 +9,7 @@ class DatePickerButton extends StatelessWidget {
     this.borderColour = kSecondaryColour,
     this.bgColour,
     this.onTapped,
+    this.bgShadow,
   }) : _size = size;
 
   final Size _size;
@@ -16,6 +17,7 @@ class DatePickerButton extends StatelessWidget {
   final String label;
   final borderColour;
   final bgColour;
+  final bgShadow;
   final Function onTapped;
 
   @override
@@ -27,6 +29,7 @@ class DatePickerButton extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
+                boxShadow: bgShadow,
                 color: bgColour,
                 border: Border.all(color: borderColour),
                 borderRadius: BorderRadius.circular(15)),
@@ -37,7 +40,10 @@ class DatePickerButton extends StatelessWidget {
           SizedBox(
             height: 2,
           ),
-          Text(label)
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.w500),
+          )
         ],
       ),
     );

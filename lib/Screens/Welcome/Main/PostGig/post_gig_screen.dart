@@ -7,6 +7,8 @@ import 'package:gigmate/constants.dart';
 import './components/modal_bottom_sheet%20background.dart';
 
 class PostGigScreen extends StatefulWidget {
+  static final String screenId = 'post_gig_screen';
+
   const PostGigScreen({
     Key key,
     @required Size size,

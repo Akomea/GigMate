@@ -3,21 +3,22 @@ import 'package:gigmate/constants.dart';
 
 class QuestionText extends StatelessWidget {
   final String question;
+  final String duration;
 
-  const QuestionText({this.question});
+  const QuestionText({this.question, this.duration});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Text(question, style: kQuestionStyle),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, top: 2.0),
+      child: Align(
+          alignment: Alignment.centerLeft,
+          child: RichText(
+            text: TextSpan(children: [
+              TextSpan(text: question, style: kQuestionStyle),
+              TextSpan(text: duration, style: kNotifiedTextStyle)
+            ]),
+          )),
     );
   }
 }

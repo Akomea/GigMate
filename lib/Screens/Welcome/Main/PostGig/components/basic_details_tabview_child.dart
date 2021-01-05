@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gigmate/constants.dart';
 import 'package:gigmate/post_gig_notifier.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_select/smart_select.dart';
@@ -18,10 +19,75 @@ class BasicDetailsTBChild extends StatefulWidget {
   _BasicDetailsTBChildState createState() => _BasicDetailsTBChildState();
 }
 
+enum GigType { Event, Contract }
+
 class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
+  GigType _gigType = GigType.Event;
+
+  List<DateTime> _multiple;
+  List<String> _multipleDates = [];
+  String _dateCount = '';
+  String _range = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    List<String> _multipleDates = [''];
+    String _selectedDate = '';
+    List<DateTime> multiple = [];
+    String _dateCount = '';
+    String _range = '';
+    super.initState();
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    // TODO: implement your code here
+    _multipleDates.clear();
+    _dateCount = 'No selected dates';
+    var pgNotifier = Provider.of<PostGigNotifier>(context, listen: false);
+    pgNotifier.setSelectedDate('Pick a date');
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range =
+            DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
+                ' - ' +
+                DateFormat('dd/MM/yyyy')
+                    .format(args.value.endDate ?? args.value.startDate)
+                    .toString();
+        pgNotifier.setSelectedDate(_range);
+      } else if (args.value is DateTime) {
+        DateTime time = args.value;
+        pgNotifier.setSelectedDate('${time.year}/${time.month}/${time.day}');
+        print(' ${pgNotifier.dateType}');
+      } else if (args.value is List<DateTime>) {
+        int listLength = args.value.length;
+        String length = listLength.toString();
+        _dateCount = listLength == 1
+            ? '$length selected date'
+            : '$length dates selected';
+
+        //TODO correctly display 0 if list is empty
+
+        _multiple = args.value;
+
+        for (DateTime date in _multiple) {
+          String multipleDate = '${date.year}-${date.month}-${date.day}';
+          if (!_multipleDates.contains(multipleDate)) {
+            _multipleDates.add(multipleDate);
+          }
+          pgNotifier.setDateType(_multipleDates.toString());
+
+          print(pgNotifier.selectedDate);
+        }
+        pgNotifier.setMultiDateCount(_dateCount);
+        print(pgNotifier.multiDateCount);
+      }
+      pgNotifier.setMultiDateCount(_dateCount);
+    });
+  }
+
   void showDatePicker(
       DateRangePickerSelectionMode pickerSelectionMode, Size size) {
-    print('tapped tap tap');
     showMaterialModalBottomSheet(
         barrierColor: Colors.black54,
         elevation: 8,
@@ -29,6 +95,7 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
         builder: (context) => Material(
               child: Container(
                 child: SfDateRangePicker(
+                  onSelectionChanged: _onSelectionChanged,
                   allowViewNavigation: true,
                   showNavigationArrow: true,
                   view: DateRangePickerView.month,
@@ -45,12 +112,10 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
             ));
   }
 
-  SfRangeValues _values = SfRangeValues(1.0, 4.0);
-  String _category = '';
-
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
+    var pgNotifier = Provider.of<PostGigNotifier>(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Column(children: [
@@ -69,10 +134,14 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
                   child: Row(
                     children: [
                       Radio(
-                        value: true,
-                        onChanged: (value) {},
-                        groupValue: [Text('dino')],
-                      ),
+                          value: GigType.Event,
+                          onChanged: (value) {
+                            setState(() {
+                              _gigType = GigType.Event;
+                            });
+                            pgNotifier.setGigType('Event');
+                          },
+                          groupValue: _gigType),
                       Text('Event'),
                     ],
                   ),
@@ -81,9 +150,14 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
                   child: Row(
                     children: [
                       Radio(
-                        value: true,
-                        onChanged: (value) {},
-                        groupValue: [Text('dino')],
+                        value: GigType.Contract,
+                        onChanged: (value) {
+                          setState(() {
+                            _gigType = GigType.Contract;
+                          });
+                          pgNotifier.setGigType('Contract');
+                        },
+                        groupValue: _gigType,
                       ),
                       Text('Contract'),
                     ],
@@ -94,7 +168,26 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
           ),
         ),
         Container(
-          child: QuestionText(question: 'Set Event Date'),
+          child: Row(
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              QuestionText(question: 'Set Event Date: '),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, top: 2.0),
+                child: Text(
+                  pgNotifier.selectedDateType == SelectedDateType.Single
+                      ? pgNotifier.selectedDate
+                      : pgNotifier.selectedDateType == SelectedDateType.Multiple
+                          ? pgNotifier.multiDateCount
+                          : pgNotifier.selectedDateType ==
+                                  SelectedDateType.Range
+                              ? pgNotifier.selectedDate
+                              : pgNotifier.selectedDate,
+                  style: kNotifiedTextStyle,
+                ),
+              )
+            ],
+          ),
           padding: EdgeInsets.only(top: 5),
         ),
         Container(
@@ -105,31 +198,73 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
               DatePickerButton(
                   size: _size,
                   label: 'Single Date',
+                  bgShadow:
+                      pgNotifier.selectedDateType == SelectedDateType.Single
+                          ? kShadow2
+                          : kNoShadow,
                   icon: Icon(
                     Icons.today,
                     size: 26,
-                    color: kAccent,
+                    color:
+                        pgNotifier.selectedDateType == SelectedDateType.Single
+                            ? kAccent
+                            : Colors.black,
                   ),
-                  bgColour: kSecondaryColour,
+                  bgColour:
+                      pgNotifier.selectedDateType == SelectedDateType.Single
+                          ? kSecondaryColour
+                          : Colors.white,
                   borderColour: kSecondaryColour,
                   onTapped: () {
+                    pgNotifier.setSelectedDate('Pick a date');
                     showDatePicker(DateRangePickerSelectionMode.single, _size);
+                    pgNotifier.setSelectedDateType(SelectedDateType.Single);
                   }),
               DatePickerButton(
                   size: _size,
                   label: 'Multiple',
-                  icon: Icon(Icons.margin),
+                  bgShadow:
+                      pgNotifier.selectedDateType == SelectedDateType.Multiple
+                          ? kShadow2
+                          : kNoShadow,
+                  icon: Icon(
+                    Icons.margin,
+                    color:
+                        pgNotifier.selectedDateType == SelectedDateType.Multiple
+                            ? kAccent
+                            : Colors.black,
+                  ),
+                  bgColour:
+                      pgNotifier.selectedDateType == SelectedDateType.Multiple
+                          ? kSecondaryColour
+                          : Colors.white,
                   onTapped: () {
+                    pgNotifier.setMultiDateCount('0 dates selected');
+                    pgNotifier.setSelectedDateType(SelectedDateType.Multiple);
                     showDatePicker(
                         DateRangePickerSelectionMode.multiple, _size);
                   }),
               DatePickerButton(
                   size: _size,
                   label: 'Range',
-                  icon: Icon(Icons.date_range_rounded),
+                  bgShadow:
+                      pgNotifier.selectedDateType == SelectedDateType.Range
+                          ? kShadow2
+                          : kNoShadow,
+                  icon: Icon(
+                    Icons.date_range_rounded,
+                    color: pgNotifier.selectedDateType == SelectedDateType.Range
+                        ? kAccent
+                        : Colors.black,
+                  ),
+                  bgColour:
+                      pgNotifier.selectedDateType == SelectedDateType.Range
+                          ? kSecondaryColour
+                          : Colors.white,
                   onTapped: () {
-                    showDatePicker(
-                        DateRangePickerSelectionMode.multiRange, _size);
+                    pgNotifier.setSelectedDate('Pick a date');
+                    pgNotifier.setSelectedDateType(SelectedDateType.Range);
+                    showDatePicker(DateRangePickerSelectionMode.range, _size);
                   }),
             ],
           ),
@@ -138,38 +273,27 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
         Container(
           color: Colors.white,
           child: SmartSelect<String>.single(
-            title: 'Event Type',
-            placeholder: 'Wedding',
-            value: _category,
-            choiceItems: choices.eventType,
-            modalType: S2ModalType.bottomSheet,
-            choiceType: S2ChoiceType.chips,
-            modalFilter: true,
-            modalFilterHint: 'Quick Search',
-            choiceStyle: S2ChoiceStyle(
-              showCheckmark: true,
-            ),
-            tileBuilder: (context, state) => S2Tile.fromState(
-              state,
-              isTwoLine: true,
-            ),
-            onChange: (state) => setState(() => _category = state.value),
-          ),
+              title: 'Event Type',
+              placeholder: 'Wedding',
+              value: pgNotifier.eventType,
+              choiceItems: choices.eventType,
+              modalType: S2ModalType.bottomSheet,
+              choiceType: S2ChoiceType.chips,
+              modalFilter: true,
+              modalFilterHint: 'Quick Search',
+              choiceStyle:
+                  S2ChoiceStyle(showCheckmark: true, activeColor: kAccent),
+              tileBuilder: (context, state) => S2Tile.fromState(
+                    state,
+                    isTwoLine: true,
+                  ),
+              onChange: (state) => pgNotifier.setEventType(state.value)),
         ),
-        // Container(
-        //   color: Colors.white,
-        //   child: SettingsTile(
-        //     title: 'Event Type',
-        //     subtitle: 'Wedding',
-        //     trailing: Icon(Icons.chevron_right),
-        //     onPressed: (BuildContext context) {
-        //
-        //     },
-        //   ),
-        // ),
-
         Container(
-          child: QuestionText(question: 'Performance Duration (Hours)'),
+          child: QuestionText(
+            question: 'Performance Duration: ',
+            duration: '${pgNotifier.performanceDuration}',
+          ),
           padding: EdgeInsets.only(top: 10),
         ),
         Align(
@@ -179,7 +303,7 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
             child: SfRangeSlider(
               min: 1.0,
               max: 10.0,
-              values: _values,
+              values: pgNotifier.sliderValues,
               interval: 1,
               stepSize: 1.0,
               activeColor: kAccent,
@@ -190,8 +314,11 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
               showTicks: true,
               onChanged: (SfRangeValues newValues) {
                 setState(() {
-                  _values = newValues;
+                  pgNotifier.setSliderValue(newValues);
                 });
+                String end = newValues.end.toInt().toString();
+                String start = newValues.start.toInt().toString();
+                pgNotifier.setPerformanceDuration('$start - $end Hours');
               },
             ),
           ),
@@ -204,35 +331,33 @@ class _BasicDetailsTBChildState extends State<BasicDetailsTBChild> {
         Row(
           children: [
             RectangularContainer(
-              height: 0.055,
+              height: kBudgetButtonHeight,
               width: 0.35,
               child: Center(
                   child: Text(
-                'GHc ${Provider.of<PostGigNotifier>(context).budgetAmount()}',
-                style: TextStyle(color: kInactiveColour, fontSize: 16),
+                'GHc ${pgNotifier.budgetAmount()}',
+                style: kNotifiedTextStyle.copyWith(fontSize: 16),
               )),
             ),
             InkWell(
               onTap: () {
-                Provider.of<PostGigNotifier>(context, listen: false)
-                    .subtractBudget();
+                pgNotifier.subtractBudget();
               },
               child: RectangularContainer(
                 colour: kSecondaryColour,
-                height: 0.055,
-                width: 0.13,
+                height: kBudgetButtonHeight,
+                width: kBudgetButtonWidth,
                 child: Icon(Icons.remove, color: kAccent),
               ),
             ),
             InkWell(
               onTap: () {
-                Provider.of<PostGigNotifier>(context, listen: false)
-                    .addToBudget();
+                pgNotifier.addToBudget();
               },
               child: RectangularContainer(
                 colour: kSecondaryColour,
-                height: 0.055,
-                width: 0.13,
+                height: kBudgetButtonHeight,
+                width: kBudgetButtonWidth,
                 child: Icon(
                   Icons.add,
                   color: kAccent,

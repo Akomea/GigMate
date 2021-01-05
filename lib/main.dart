@@ -6,6 +6,7 @@ import 'package:gigmate/post_gig_notifier.dart';
 import 'package:gigmate/services/connectivity_service.dart';
 import 'package:provider/provider.dart';
 
+import './Screens/Welcome/Main/detail_screen.dart';
 import 'Screens/Welcome/Main/home_screen.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'constants.dart';
@@ -46,11 +47,12 @@ class MyApp extends StatelessWidget {
                 bodyText2: TextStyle(
                     fontFamily: 'Roboto',
                     color: Colors.black.withOpacity(0.6)))),
-        initialRoute: WelcomeScreen.screenId,
+        initialRoute: HomeScreen.screenId,
         routes: {
           WelcomeScreen.screenId: (context) => WelcomeScreen(),
           LoginScreen.screenId: (context) => LoginScreen(),
           HomeScreen.screenId: (context) => HomeScreen(),
+          DetailScreen.screenId: (context) => DetailScreen(),
         },
       ),
     );

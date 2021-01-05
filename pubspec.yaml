@@ -92,6 +92,9 @@ flutter:
     - family: Playfair
       fonts:
         - asset: assets/fonts/playfair-display.ttf
+    - family: Austin
+      fonts:
+        - asset: assets/fonts/Austin.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Black.ttf

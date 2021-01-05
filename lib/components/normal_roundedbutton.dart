@@ -27,12 +27,15 @@ class NormalRoundedButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(29),
         child: FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
           color: bgColour,
           onPressed: onPressed,
           child: Text(
             buttonText,
-            style: TextStyle(color: textColour, fontFamily: 'OpenSans'),
+            style: TextStyle(
+                color: textColour,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold),
           ),
         ),
       ),

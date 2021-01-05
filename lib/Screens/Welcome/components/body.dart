@@ -37,8 +37,7 @@ class Body extends StatelessWidget {
               bgColour: kSecondaryColour,
               buttonText: 'Get Started',
               textColour: kPurpleTextColour,
-              onPressed: () =>
-              {
+              onPressed: () => {
                 Navigator.popAndPushNamed(context, HomeScreen.screenId),
               },
             ),
