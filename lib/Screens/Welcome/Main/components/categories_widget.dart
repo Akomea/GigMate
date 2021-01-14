@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gigmate/Screens/Welcome/Main/components/category_circle_container.dart';
 
+import '../studio_main_screen.dart';
+
 class CategoriesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class CategoriesWidget extends StatelessWidget {
             imageUrl: 'assets/icons/studio.svg',
             iconWidth: 50,
             categoryName: 'Studio',
+            screenId: StudioMainScreen.screenId,
           ),
           PostGigCategoryCircleContainer(
             imageUrl: 'assets/icons/concert.svg',

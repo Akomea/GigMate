@@ -51,6 +51,10 @@ dependencies:
   syncfusion_flutter_datepicker: ^18.4.30-beta
   settings_ui: ^0.5.0
   smart_select: ^4.3.2
+  video_player: ^1.0.1
+  url_launcher: ^5.7.10
+  share: ^0.6.5+4
+  font_awesome_flutter: ^8.11.0
 
 dev_dependencies:
   flutter_test:

@@ -9,6 +9,7 @@ class PostGigCategoryCircleContainer extends StatelessWidget {
   final double iconWidth;
   final Color bgColour;
   final double opacity;
+  final String screenId;
 
   PostGigCategoryCircleContainer({
     this.imageUrl,
@@ -16,20 +17,26 @@ class PostGigCategoryCircleContainer extends StatelessWidget {
     this.iconWidth,
     this.bgColour = Colors.white,
     this.opacity = 1.0,
+    this.screenId,
   });
+
+  void navigateTo(BuildContext context, {String screenId}) {
+    Navigator.pushNamed(context, screenId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: opacity,
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.all(8),
-            child: GestureDetector(
-              onTap: () {
-                print('category tapped');
-              },
+    return InkWell(
+      splashColor: kSecondaryColour,
+      onTap: () {
+        navigateTo(context, screenId: screenId);
+      },
+      child: Opacity(
+        opacity: opacity,
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.all(8),
               child: CircleAvatar(
                 child: SvgPicture.asset(
                   imageUrl,
@@ -40,14 +47,14 @@ class PostGigCategoryCircleContainer extends StatelessWidget {
                 backgroundColor: bgColour,
               ),
             ),
-          ),
-          Text(
-            categoryName,
-            style: TextStyle(
-                color: kPurpleTextColour.withOpacity(0.5),
-                fontWeight: FontWeight.w500),
-          )
-        ],
+            Text(
+              categoryName,
+              style: TextStyle(
+                  color: kPurpleTextColour.withOpacity(0.5),
+                  fontWeight: FontWeight.w500),
+            )
+          ],
+        ),
       ),
     );
   }

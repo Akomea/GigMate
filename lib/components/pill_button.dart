@@ -24,7 +24,10 @@ class PillButton extends StatelessWidget {
               child: FittedBox(
                 child: Text(
                   buttonText,
-                  style: TextStyle(color: kAccent, fontFamily: 'OpenSans'),
+                  style: TextStyle(
+                      color: kAccent,
+                      fontFamily: 'OpenSans',
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),

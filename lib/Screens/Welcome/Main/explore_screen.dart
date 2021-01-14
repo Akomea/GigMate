@@ -8,8 +8,10 @@ import 'package:gigmate/Screens/Welcome/Main/components/pro_gig_card.dart';
 import 'package:gigmate/components/gig_card.dart';
 import 'package:gigmate/components/persistent_search_bar.dart';
 
+import './studio_main_screen.dart';
 import '../../../constants.dart';
-import 'detail_screen.dart';
+import 'band_detail_screen.dart';
+import 'solo_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -111,6 +113,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GigSoloCard(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, SoloDetailScreen.screenId);
+                            },
                             size: _size,
                             name: 'Jonas Ahedor',
                             role: 'Gospel Piano',
@@ -237,6 +243,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     height: _size.height * 0.40,
                     child: CarouselSlider(
                         items: [
+                          Hero(
+                            tag: 'studio',
+                            child: ProGigCard(
+                              onTap: () => Navigator.pushNamed(
+                                  context, StudioMainScreen.screenId),
+                              size: _size,
+                              imageUrl: 'assets/images/producer.jpg',
+                              cardTitle: 'Producers',
+                              description:
+                                  'Hire and work with top producers ready to turn your song or idea into a hit',
+                            ),
+                          ),
                           ProGigCard(
                             size: _size,
                             imageUrl: 'assets/images/session.jpg',
@@ -244,13 +262,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             description:
                                 'Custom drum tracks, guitarists, bass players, '
                                 'string arrangers, and countless top instrumentalists to hire',
-                          ),
-                          ProGigCard(
-                            size: _size,
-                            imageUrl: 'assets/images/producer.jpg',
-                            cardTitle: 'Producers',
-                            description:
-                                'Hire and work with top producers ready to turn your song or idea into a hit',
                           ),
                           ProGigCard(
                             size: _size,

@@ -6,8 +6,10 @@ import 'package:gigmate/post_gig_notifier.dart';
 import 'package:gigmate/services/connectivity_service.dart';
 import 'package:provider/provider.dart';
 
-import './Screens/Welcome/Main/detail_screen.dart';
+import './Screens/Welcome/Main/band_detail_screen.dart';
+import './Screens/Welcome/Main/solo_detail_screen.dart';
 import 'Screens/Welcome/Main/home_screen.dart';
+import 'Screens/Welcome/Main/studio_main_screen.dart';
 import 'Screens/Welcome/welcome_screen.dart';
 import 'constants.dart';
 import 'enum/connectivity_status.dart';
@@ -53,6 +55,8 @@ class MyApp extends StatelessWidget {
           LoginScreen.screenId: (context) => LoginScreen(),
           HomeScreen.screenId: (context) => HomeScreen(),
           DetailScreen.screenId: (context) => DetailScreen(),
+          SoloDetailScreen.screenId: (context) => SoloDetailScreen(),
+          StudioMainScreen.screenId: (context) => StudioMainScreen(),
         },
       ),
     );
