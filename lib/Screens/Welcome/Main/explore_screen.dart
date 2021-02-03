@@ -7,6 +7,9 @@ import 'package:gigmate/Screens/Welcome/Main/components/gig_solo_card.dart';
 import 'package:gigmate/Screens/Welcome/Main/components/pro_gig_card.dart';
 import 'package:gigmate/components/gig_card.dart';
 import 'package:gigmate/components/persistent_search_bar.dart';
+import 'package:gigmate/model_api.dart';
+import 'package:gigmate/model_notifier.dart';
+import 'package:provider/provider.dart';
 
 import './studio_main_screen.dart';
 import '../../../constants.dart';
@@ -23,6 +26,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
     var scrollableCardContainerSize = _size.height * 0.38;
+    ModelNotifier modelNotifier =
+        Provider.of<ModelNotifier>(context, listen: true);
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -103,35 +109,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     trailing: Icons.arrow_right_alt_rounded,
                   ),
                   Container(
-                    //Container for scrollable row
-                    height: _size.height * 0.35,
-                    padding: EdgeInsets.symmetric(vertical: 0.0),
-                    child: SingleChildScrollView(
-                      controller: ScrollController(initialScrollOffset: 0.2),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GigSoloCard(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, SoloDetailScreen.screenId);
-                            },
-                            size: _size,
-                            name: 'Jonas Ahedor',
-                            role: 'Gospel Piano',
-                            imageUrl: 'assets/images/jonas.JPG',
-                          ),
-                          GigSoloCard(
-                            size: _size,
-                            name: 'Kwame Yeboah',
-                            role: 'Contemporary Guitar',
-                            imageUrl: 'assets/images/kwame.jpg',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                      //Container for scrollable row
+                      height: _size.height * 0.35,
+                      padding: EdgeInsets.symmetric(vertical: 0.0),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: modelNotifier.soloMusicianList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GigSoloCard(
+                                size: _size,
+                                name:
+                                    modelNotifier.soloMusicianList[index].name,
+                                imageUrl: modelNotifier
+                                    .soloMusicianList[index].media[1],
+                                role:
+                                    modelNotifier.soloMusicianList[index].role,
+                                onTap: () {
+                                  modelNotifier.currentSoloMusician =
+                                      modelNotifier.soloMusicianList[index];
+                                  Navigator.pushNamed(
+                                      context, SoloDetailScreen.screenId);
+                                });
+                          })),
                   CardHeaderText(
                     leading: 'Places & Events',
                   ),
@@ -282,5 +281,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
         ],
       ),
     );
+  }
+
+  ModelApi _modelApi = ModelApi();
+
+  @override
+  void initState() {
+    ModelNotifier modelNotifier =
+        Provider.of<ModelNotifier>(context, listen: false);
+    _modelApi.getSoloMusicians(modelNotifier);
+    super.initState();
   }
 }

@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
 import 'package:gigmate/Screens/Welcome/welcome_screen.dart';
+import 'package:gigmate/model_notifier.dart';
 import 'package:gigmate/post_gig_notifier.dart';
 import 'package:gigmate/services/connectivity_service.dart';
+import 'package:gigmate/services/firestorage_service.dart';
 import 'package:provider/provider.dart';
 
 import './Screens/Welcome/Main/band_detail_screen.dart';
@@ -32,6 +34,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => PostGigNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ModelNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FireStorageService(),
         ),
         StreamProvider<ConnectivityStatus>(
           create: (context) =>

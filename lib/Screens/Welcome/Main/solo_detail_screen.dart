@@ -2,19 +2,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gigmate/constants.dart';
-import 'package:share/share.dart';
+import 'package:gigmate/model_notifier.dart';
 
-//import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+//import '../../Welcome/Main/PostGig/post_gig_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../components/normal_roundedbutton.dart';
-//import '../../Welcome/Main/PostGig/post_gig_screen.dart';
 
 // import 'package:flutter_svg/flutter_svg.dart';
 class SoloDetailScreen extends StatefulWidget {
-  static final String screenId = 'solo_details_screen_id';
+  static const String screenId = 'solo_details_screen_id';
 
   @override
   _SoloDetailScreenState createState() => _SoloDetailScreenState();
@@ -27,11 +27,11 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
   bool _playPause = false;
   ScrollController _scrollController;
 
-  double _initialSheetChildSize = 0.6;
+  final double _initialSheetChildSize = 0.6;
   double _dragScrollSheetExtent = 0;
   double _widgetHeight = 0;
   double _fabPosition = 0;
-  double _fabPositionPadding = 10;
+  final double _fabPositionPadding = 10;
   VideoPlayerController _videoPlayerController;
   Future<void> _initializeVideoPlayerFuture;
 
@@ -46,6 +46,9 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
     double _bottomContainerHeight = 60;
+    ModelNotifier modelNotifier =
+        Provider.of<ModelNotifier>(context, listen: true);
+    var reviews = modelNotifier.currentSoloMusician.reviews;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -163,8 +166,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         // loading spinner.
                         return Stack(
                           children: [
-                            Image.asset(
-                              'assets/images/jonas.JPG',
+                            Image.network(
+                              '${modelNotifier.currentSoloMusician.media[1]}',
                               //FIRST IMAGE AS LOADING PLACEHOLDER
                               height: _size.height,
                               width: _size.width,
@@ -176,20 +179,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                       }
                     },
                   ),
-                  Image.asset(
-                    'assets/images/jonas.JPG',
-                    height: _size.height,
-                    width: _size.width,
-                    fit: BoxFit.cover,
-                  ),
-                  Image.asset(
-                    'assets/images/kwanpa_guitar.png',
-                    height: _size.height,
-                    width: _size.width,
-                    fit: BoxFit.cover,
-                  ),
-                  Image.asset(
-                    'assets/images/kwanpa_drum.png',
+                  Image.network(
+                    '${modelNotifier.currentSoloMusician.media[1]}',
                     height: _size.height,
                     width: _size.width,
                     fit: BoxFit.cover,
@@ -263,8 +254,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                               height: 5,
                             ),
                             Text(
-                              'I\'m a professional classically trained composer and pianist with over 12 years of experience. I\'ve done high quality music for short films, advertising, shows and video games. Some of my clients: Kaytee, Siisi Baidoo, Kenn Akomea.'
-                              'My job is to provide you with the perfect music for your projects and live shows. I work with the best equipment and instruments to ensure professional performance.',
+                              '${modelNotifier.currentSoloMusician.description}',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
@@ -279,7 +269,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                             SizedBox(
                               height: 5,
                             ),
-                            Text('Genre: Choral, Pop Gospel, Contemporary etc'),
+                            Text('Style: Choral, Pop Gospel, Contemporary etc'),
                             SizedBox(
                               height: 10,
                             ),
@@ -308,13 +298,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              children: [
-                                CreditsPill(name: 'Siisi Baidoo'),
-                                CreditsPill(name: 'Kaytee'),
-                                CreditsPill(name: 'Fine boy Boboo'),
-                              ],
-                            ),
+                            getCredits(
+                                modelNotifier.currentSoloMusician.credits),
                             Divider(
                               endIndent: 20,
                             ),
@@ -322,7 +307,9 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Cients\' Review',
+                                  reviews != null
+                                      ? 'Clients\' Reviews'
+                                      : 'No Reviews',
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -332,7 +319,9 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                 FlatButton(
                                   onPressed: () {},
                                   child: Text(
-                                    'Show All',
+                                    reviews != null
+                                        ? 'Show All'
+                                        : 'Rate & Review',
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -342,103 +331,20 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                 ),
                               ],
                             ),
-                            CarouselSlider(
-                              items: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 15, horizontal: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 10),
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage(
-                                                    'assets/images/adwoa.jpg'),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Adwoa Yankey',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 2,
-                                                ),
-                                                Text(
-                                                  'Wedding Event',
-                                                  style: TextStyle(
-                                                      color: Colors.black54),
-                                                ),
-                                                SizedBox(
-                                                  height: 2,
-                                                ),
-                                                RatingWidget()
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Amazing Band',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black54,
-                                                      fontFamily: 'Roboto'),
-                                                ),
-                                                SizedBox(height: 5),
-                                                Expanded(
-                                                  child: Container(
-                                                    child: Text(
-                                                      'There is no one who loves pain itself, who seeks after it'
-                                                      ' and wants to have it, simply because it is pain',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'OpenSans'),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            reviews != null
+                                ? CarouselSlider(
+                                    items: getReviewList(reviews),
+                                    options: CarouselOptions(
+                                      height: 230,
+                                      viewportFraction: 0.78,
                                     ),
-                                    decoration: BoxDecoration(
-                                        boxShadow: kTextFieldContainerShadow,
-                                        color: Colors.white),
-                                    margin: EdgeInsets.all(10),
-                                  ),
-                                ),
-                              ],
-                              options: CarouselOptions(
-                                height: 230,
-                                viewportFraction: 0.78,
-                              ),
-                            ),
+                                  )
+                                : Container(
+                                    child: Center(
+                                      child: Image.asset(
+                                          'assets/images/emptyState.PNG'),
+                                    ),
+                                  )
                           ],
                         ),
                       ),
@@ -478,7 +384,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'Jonas Ahedor',
+                            '${modelNotifier.currentSoloMusician.name}',
                             style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.bold,
@@ -491,7 +397,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         ),
                         Row(
                           children: [
-                            Text('Accra | '),
+                            Text(
+                                '${modelNotifier.currentSoloMusician.location} | '),
                             Text('\$\$\$\$ | '),
                             Row(children: [
                               Padding(
@@ -502,7 +409,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                   color: kAccent,
                                 ),
                               ),
-                              Text('4.9 (18 votes)')
+                              Text(
+                                  '${getRatingScore(reviews)} (${reviews.length} reviews)')
                             ]),
                           ],
                         ),
@@ -516,136 +424,48 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Gospel Piano',
+                              modelNotifier.currentSoloMusician.role,
                               style: TextStyle(
                                   color: kAccent, fontWeight: FontWeight.bold),
                             ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: Icon(
-                                    Icons.event_available,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                Text(
-                                  'Available',
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            )
+                            const Availability()
                           ],
                         )
                       ],
                     ),
                   ),
                 )),
-          ), //FAB
+          ), //floating header
           Positioned(
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 width: double.infinity,
                 height: _bottomContainerHeight + 10,
                 color: Colors.white.withOpacity(0.7),
                 child: NormalRoundedButton(
                     bgColour: kSecondaryColour,
-                    buttonText: 'Contact Jonas',
+                    buttonText:
+                        'Contact ${modelNotifier.currentSoloMusician.name}',
                     textColour: kAccent,
                     onPressed: () {
                       customLaunch('tel:+233509490123');
                     }),
               ),
             ),
-          )
+          ) //contact button
         ],
       ),
     );
   }
 
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.all(10),
-          title: Column(
-            children: [
-              Text('Band Schedule'),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  '*Highlighted dates indicate booked dates on which bands are likely unavailable',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: kAccent, fontSize: 12),
-                ),
-              )
-            ],
-          ),
-          content: AbsorbPointer(
-            absorbing: true,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Container(
-                  decoration:
-                      BoxDecoration(color: kSecondaryColour.withOpacity(0.05)),
-                  child: SfDateRangePicker(
-                    onSelectionChanged: (args) => {},
-                    view: DateRangePickerView.month,
-                    enableMultiView: true,
-                    navigationDirection:
-                        DateRangePickerNavigationDirection.vertical,
-                    monthCellStyle: DateRangePickerMonthCellStyle(
-                      blackoutDateTextStyle: TextStyle(
-                          color: Colors.white,
-                          decoration: TextDecoration.lineThrough),
-                      blackoutDatesDecoration: BoxDecoration(
-                          color: Colors.red,
-                          border: Border.all(color: kAccent, width: 1),
-                          shape: BoxShape.circle),
-                    ),
-                    selectionMode: DateRangePickerSelectionMode.single,
-                    selectionColor: kAccent,
-                    todayHighlightColor: kAccent,
-                    enablePastDates: false,
-                    rangeSelectionColor: kSecondaryColour,
-                    startRangeSelectionColor: kAccent,
-                    endRangeSelectionColor: kAccent,
-                    monthViewSettings: DateRangePickerMonthViewSettings(
-                        blackoutDates: List<DateTime>()
-                          ..add(DateTime(2021, 01, 18))
-                          ..add(DateTime(2021, 01, 19))
-                          ..add(DateTime(2021, 01, 9))
-                          ..add(DateTime(2021, 01, 15))),
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  width: MediaQuery.of(context).size.width),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                'Okay',
-                style: TextStyle(color: kAccent, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void customLaunch(command) async {
+  Future<void> customLaunch(String command) async {
     if (await canLaunch(command)) {
       await launch(command);
-    } else
-      print('could not launch $command');
+    } else {
+      debugPrint('could not launch $command');
+    }
   }
 
   void delayTime() {
@@ -664,12 +484,14 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
+    ModelNotifier modelNotifier =
+        Provider.of<ModelNotifier>(context, listen: false);
+
     delayTime();
     _isPlayButtonVisible = true;
 
-    _videoPlayerController =
-        VideoPlayerController.asset('assets/images/jonas.mp4');
+    _videoPlayerController = VideoPlayerController.network(
+        modelNotifier.currentSoloMusician.media[0]);
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
 
     _animationController = AnimationController(
@@ -708,6 +530,212 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
 
     super.dispose();
   }
+
+  double getRatingScore(List reviews) {
+    int sumStars = 0;
+    double average = 0.0;
+    if (reviews != null) {
+      for (var review in reviews) {
+        sumStars += review['numStars'];
+      }
+    }
+    average = sumStars / reviews.length;
+    return average;
+  }
+
+  List<Widget> getReviewList(List reviews) {
+    List<Widget> reviewList = [];
+    if (reviews != null) {
+      for (var review in reviews) {
+        reviewList.add(
+          ReviewCard(
+            reviewerName: review['reviewerName'],
+            reviewerImageUrl: review['reviewerImageUrl'],
+            numStars: review['numStars'],
+            summary: review['summary'],
+            review: review['review'],
+            eventType: review['eventType'],
+          ),
+        );
+      }
+    } else
+      print('no reviews');
+    return reviewList;
+  }
+}
+
+Widget getStars(int numStars) {
+  int totalStars = 5;
+  int numEmptyStars = totalStars - numStars;
+  List<Icon> rating = [];
+  Icon fullStar = Icon(
+    Icons.star,
+    size: 18,
+    color: kAccent,
+  );
+  Icon emptyStar = Icon(
+    Icons.star_border_outlined,
+    size: 18,
+    color: kAccent,
+  );
+  if (numStars <= totalStars || numStars != 0) {
+    for (int i = 1; i <= numStars; i++) {
+      rating.add(fullStar);
+    }
+    for (int i = 1; i <= numEmptyStars; i++) {
+      rating.add(emptyStar);
+    }
+  } else {
+    print('error in stars count');
+  }
+  return Row(
+    children: rating,
+  );
+}
+
+class ReviewCard extends StatelessWidget {
+  final reviewerName;
+  final String reviewerImageUrl;
+  final String summary;
+  final String review;
+  final numStars;
+  final String eventType;
+
+  ReviewCard(
+      {this.reviewerName,
+      this.reviewerImageUrl,
+      this.summary,
+      this.review,
+      this.numStars,
+      this.eventType});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(reviewerImageUrl),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reviewerName,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      eventType,
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    getStars(numStars),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      summary,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                          fontFamily: 'Roboto'),
+                    ),
+                    SizedBox(height: 5),
+                    Expanded(
+                      child: Container(
+                        child: Text(
+                          review,
+                          style: TextStyle(fontFamily: 'OpenSans'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        decoration: BoxDecoration(
+            boxShadow: kTextFieldContainerShadow, color: Colors.white),
+        margin: EdgeInsets.all(10),
+      ),
+    );
+  }
+}
+
+class Availability extends StatelessWidget {
+  final Icon icon;
+  final Color color;
+
+  const Availability({this.icon, this.color = Colors.green});
+
+  @override
+  Widget build(BuildContext context) {
+    ModelNotifier modelNotifier =
+        Provider.of<ModelNotifier>(context, listen: false);
+    Icon available = Icon(
+      Icons.event_available,
+      color: Colors.green,
+    );
+    Icon unavailable = Icon(
+      Icons.event_busy,
+      color: Colors.redAccent,
+    );
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 5),
+          child: modelNotifier.currentSoloMusician.availability == true
+              ? available
+              : unavailable,
+        ),
+        modelNotifier.currentSoloMusician.availability == true
+            ? Text(
+                'Available',
+                style: TextStyle(color: Colors.green),
+              )
+            : Text(
+                'Unavailable',
+                style: TextStyle(color: Colors.redAccent),
+              )
+      ],
+    );
+  }
+}
+
+Widget getCredits(List credits) {
+  List<CreditsPill> creditList = List<CreditsPill>();
+  for (var credit in credits) {
+    creditList.add(new CreditsPill(
+      name: credit,
+    ));
+  }
+  return Row(children: creditList);
 }
 
 class CreditsPill extends StatelessWidget {
@@ -728,41 +756,6 @@ class CreditsPill extends StatelessWidget {
         name,
         style: TextStyle(color: kPrimaryColour),
       ),
-    );
-  }
-}
-
-class RatingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          Icons.star,
-          size: 18,
-          color: kAccent,
-        ),
-        Icon(
-          Icons.star,
-          size: 18,
-          color: kAccent,
-        ),
-        Icon(
-          Icons.star,
-          size: 18,
-          color: kAccent,
-        ),
-        Icon(
-          Icons.star_border_outlined,
-          size: 18,
-          color: kAccent,
-        ),
-        Icon(
-          Icons.star_border_outlined,
-          size: 18,
-          color: kAccent,
-        )
-      ],
     );
   }
 }

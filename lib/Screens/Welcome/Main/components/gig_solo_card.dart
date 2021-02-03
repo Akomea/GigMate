@@ -84,7 +84,7 @@ class GigSoloCard extends StatelessWidget {
                   color: kShadowColour)
             ],
             image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage(imageUrl))),
+                fit: BoxFit.cover, image: NetworkImage(imageUrl))),
         margin: EdgeInsets.symmetric(horizontal: 5),
         width: _size.width * 0.92,
         height: _size.height * 0.32,

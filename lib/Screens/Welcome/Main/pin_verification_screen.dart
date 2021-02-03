@@ -20,10 +20,10 @@ class PinCodeVerificationScreen extends StatefulWidget {
   final String phoneNumber;
   final TextEditingController smsCodeController;
   final Function loginFunction;
-  static final String screenId = 'verification_screen';
+  static const String screenId = 'verification_screen';
   final StreamController<ErrorAnimationType> errorController;
 
-  PinCodeVerificationScreen(
+  const PinCodeVerificationScreen(
       {this.phoneNumber,
       this.smsCodeController,
       this.loginFunction,
@@ -35,7 +35,7 @@ class PinCodeVerificationScreen extends StatefulWidget {
 }
 
 class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
-  var onTapRecognizer;
+  GestureRecognizer onTapRecognizer;
   TextEditingController textEditingController = TextEditingController();
 
   // ..text = "123456";
@@ -46,9 +46,9 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
   int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
   bool isResendTextVisible = true;
   bool isCountdownTimerVisible = true;
-  FocusNode _focus = FocusNode();
+  final FocusNode _focus = FocusNode();
 
-  MutableIcon _suffixIcon = MutableIcon(
+  MutableIcon _suffixIcon = const MutableIcon(
     useSpinner: false,
   );
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gigmate/constants.dart';
+import 'package:gigmate/services/firestorage_service.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:video_player/video_player.dart';
@@ -110,6 +111,31 @@ class _DetailScreenState extends State<DetailScreen>
                       }
                     },
                   ),
+                  FutureBuilder(
+                      future:
+                          FireStorageService.getImage(context, "drummer.jpg"),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Container(
+                            color: Colors.black26,
+                            width: 40,
+                            height: 10,
+                            child: snapshot.data,
+                          );
+                        } else {
+                          return Stack(
+                            children: [
+                              Image.asset(
+                                'assets/images/kwanpa.jpg',
+                                height: _size.height,
+                                width: _size.width,
+                                fit: BoxFit.cover,
+                              ),
+                              Center(child: CircularProgressIndicator()),
+                            ],
+                          );
+                        }
+                      }),
 
                   Image.asset(
                     'assets/images/kwanpa.jpg',
