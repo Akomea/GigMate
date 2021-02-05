@@ -58,7 +58,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   Container(
                     //Container for scrollable row
                     height: scrollableCardContainerSize,
-                    padding: EdgeInsets.symmetric(vertical: 0.0),
+
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -111,7 +111,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   Container(
                       //Container for scrollable row
                       height: _size.height * 0.35,
-                      padding: EdgeInsets.symmetric(vertical: 0.0),
+                      padding: EdgeInsets.only(left: 5.0),
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: modelNotifier.soloMusicianList.length,

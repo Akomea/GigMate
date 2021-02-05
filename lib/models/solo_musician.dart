@@ -7,10 +7,9 @@ class SoloMusician {
   String location;
   List<dynamic> credits;
   List reviews;
-  int ratingScore;
-  int totalRatingVotes;
   bool availability;
   String secondaryInstruments;
+  bool isPremium;
 
   SoloMusician.fromMap(Map<String, dynamic> data) {
     name = data['name'];
@@ -19,10 +18,10 @@ class SoloMusician {
     media = data['media'];
     location = data['location'];
     credits = data['credits'];
-    ratingScore = data['ratingScore'];
-    totalRatingVotes = data['totalRatingVotes'];
     availability = data['availability'];
     secondaryInstruments = data['secondaryInstruments'];
     reviews = data['reviews'];
+    isPremium = data['isPremium'];
+    style = data['style'];
   }
 }

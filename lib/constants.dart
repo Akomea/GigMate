@@ -24,6 +24,7 @@ const kHeaderStyle = TextStyle(
   fontSize: 25.0,
   color: kPrimaryColour,
 );
+const kDetailTextStyle = TextStyle(color: Colors.black, fontFamily: 'OpenSans');
 const kQuestionStyle = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 14,

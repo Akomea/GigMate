@@ -21,7 +21,6 @@ class GigSoloCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2),
       child: Container(
         child: Stack(
           children: [
@@ -29,7 +28,7 @@ class GigSoloCard extends StatelessWidget {
               //black mask on card
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.1),
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
             FlatButton(
@@ -75,7 +74,7 @@ class GigSoloCard extends StatelessWidget {
           ],
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
                   offset: Offset.fromDirection(2, 5),
@@ -86,8 +85,7 @@ class GigSoloCard extends StatelessWidget {
             image: DecorationImage(
                 fit: BoxFit.cover, image: NetworkImage(imageUrl))),
         margin: EdgeInsets.symmetric(horizontal: 5),
-        width: _size.width * 0.92,
-        height: _size.height * 0.32,
+        width: _size.width * 0.46,
       ),
     );
   }

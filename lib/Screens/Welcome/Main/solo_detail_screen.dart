@@ -1,9 +1,12 @@
+import 'dart:io' as io;
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:gigmate/constants.dart';
+import 'package:gigmate/enum/connectivity_status.dart';
 import 'package:gigmate/model_notifier.dart';
-
 //import '../../Welcome/Main/PostGig/post_gig_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -41,11 +44,13 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
   CarouselController _buttonCarouselController = CarouselController();
 
   int carouselIndex;
+  ConnectivityStatus connectionStatus;
 
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
     double _bottomContainerHeight = 60;
+    connectionStatus = Provider.of<ConnectivityStatus>(context);
     ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: true);
     var reviews = modelNotifier.currentSoloMusician.reviews;
@@ -93,77 +98,104 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                   FutureBuilder(
                     future: _initializeVideoPlayerFuture,
                     builder: (context, snapshot) {
+                      print(snapshot.error);
+                      print(snapshot.connectionState);
+
                       if (snapshot.connectionState == ConnectionState.done) {
                         // If the VideoPlayerController has finished initialization, use
                         // the data it provides to limit the aspect ratio of the VideoPlayer.
-                        return AspectRatio(
-                          aspectRatio: _videoPlayerController.value.aspectRatio,
-                          // Use the VideoPlayer widget to display the video.
-                          child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (_isPlayButtonVisible) {
-                                    _buttonOpacity = 0.0;
-                                  } else if (!_isPlayButtonVisible) {
-                                    _buttonOpacity = 1.0;
-                                  }
-                                });
-                                _isPlayButtonVisible = !_isPlayButtonVisible;
-                                delayTime();
-                              },
-                              child: Stack(
-                                children: [
-                                  VideoPlayer(_videoPlayerController),
-                                  Positioned(
-                                    child: Center(
-                                      child: AnimatedOpacity(
-                                        opacity: _buttonOpacity,
-                                        duration: Duration(seconds: 1),
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _playPause
-                                                  ? _animationController
-                                                      .reverse()
-                                                  : _animationController
-                                                      .forward();
+                        if (snapshot.connectionState == ConnectionState.none) {
+                          print('error is: KENN!!! ${snapshot.error}');
 
-                                              if (_videoPlayerController
-                                                  .value.isPlaying) {
-                                                _videoPlayerController.pause();
-                                                _playPause = false;
-                                                _buttonOpacity = 1;
-                                              } else {
-                                                // If the video is paused, play it.
-                                                _videoPlayerController.play();
-                                                _playPause = true;
-                                                _buttonOpacity = 1;
-                                                delayTime();
-                                              }
-                                            });
-                                            _playPause = !_playPause;
-                                          },
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                Colors.white.withOpacity(0.7),
-                                            radius: 36,
-                                            child: AnimatedIcon(
-                                              icon: AnimatedIcons.pause_play,
-                                              color: kAccent,
-                                              size: 45,
-                                              progress: curve,
+                          return Container(
+                            color: Colors.black.withOpacity(0.5),
+                            height: _size.height,
+                            width: _size.width,
+                            child: Center(
+                              child: Text(
+                                'Unable to play video',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        } else {
+                          _videoPlayerController.initialize();
+                          _videoPlayerController.play();
+                          _videoPlayerController.setLooping(true);
+                          return AspectRatio(
+                            aspectRatio:
+                                _videoPlayerController.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_isPlayButtonVisible) {
+                                      _buttonOpacity = 0.0;
+                                    } else if (!_isPlayButtonVisible) {
+                                      _buttonOpacity = 1.0;
+                                    }
+                                  });
+                                  _isPlayButtonVisible = !_isPlayButtonVisible;
+                                  delayTime();
+                                },
+                                child: Stack(
+                                  children: [
+                                    VideoPlayer(_videoPlayerController),
+                                    Positioned(
+                                      child: Center(
+                                        child: AnimatedOpacity(
+                                          opacity: _buttonOpacity,
+                                          duration: Duration(seconds: 1),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                _playPause
+                                                    ? _animationController
+                                                        .reverse()
+                                                    : _animationController
+                                                        .forward();
+
+                                                if (_videoPlayerController
+                                                    .value.isPlaying) {
+                                                  _videoPlayerController
+                                                      .pause();
+                                                  _playPause = false;
+                                                  _buttonOpacity = 1;
+                                                } else {
+                                                  // If the video is paused, play it.
+                                                  _videoPlayerController.play();
+                                                  _playPause = true;
+                                                  _buttonOpacity = 1;
+                                                  delayTime();
+                                                }
+                                              });
+                                              _playPause = !_playPause;
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.white.withOpacity(0.7),
+                                              radius: 36,
+                                              child: AnimatedIcon(
+                                                icon: AnimatedIcons.pause_play,
+                                                color: kAccent,
+                                                size: 45,
+                                                progress: curve,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              )),
-                        );
+                                  ],
+                                )),
+                          );
+                        }
                       } else {
                         // If the VideoPlayerController is still initializing, show a
                         // loading spinner.
+                        print(snapshot.error);
+                        print(snapshot.connectionState);
+
                         return Stack(
                           children: [
                             Image.network(
@@ -269,17 +301,18 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                             SizedBox(
                               height: 5,
                             ),
-                            Text('Style: Choral, Pop Gospel, Contemporary etc'),
+                            Text(
+                              'Style: ${modelNotifier.currentSoloMusician.style}',
+                              style: kDetailTextStyle,
+                            ),
                             SizedBox(
                               height: 10,
                             ),
                             Container(
                                 width: _size.width * 0.7,
                                 child: Text(
-                                  'Other Instruments: Guitar, Violin, Male vocals',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'OpenSans'),
+                                  'Other Instruments: ${modelNotifier.currentSoloMusician.secondaryInstruments}',
+                                  style: kDetailTextStyle,
                                 )),
                             SizedBox(
                               height: 10,
@@ -399,7 +432,9 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                           children: [
                             Text(
                                 '${modelNotifier.currentSoloMusician.location} | '),
-                            Text('\$\$\$\$ | '),
+                            Text(modelNotifier.currentSoloMusician.isPremium
+                                ? '\$\$\$ | '
+                                : '\$\$ | '),
                             Row(children: [
                               Padding(
                                 padding: const EdgeInsets.only(right: 5),
@@ -410,7 +445,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                 ),
                               ),
                               Text(
-                                  '${getRatingScore(reviews)} (${reviews.length} reviews)')
+                                  '${getRatingScore(reviews)} (${getTotalNumReviews(reviews)} reviews)')
                             ]),
                           ],
                         ),
@@ -482,10 +517,24 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
     }
   }
 
+  static String path = '';
+  io.File vidUrl = io.File(path);
+
+  Future getDownloadedUrl(String url) async {
+    var fetchedFile = await DefaultCacheManager().getSingleFile(url);
+    setState(() {
+      vidUrl = fetchedFile;
+      path = fetchedFile.path;
+      print(path);
+    });
+  }
+
   @override
   void initState() {
     ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
+
+    //getDownloadedUrl(modelNotifier.currentSoloMusician.media[0]);
 
     delayTime();
     _isPlayButtonVisible = true;
@@ -538,8 +587,9 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
       for (var review in reviews) {
         sumStars += review['numStars'];
       }
-    }
-    average = sumStars / reviews.length;
+    } else
+      return 0.0;
+    average = sumStars / getTotalNumReviews(reviews);
     return average;
   }
 
@@ -561,6 +611,13 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
     } else
       print('no reviews');
     return reviewList;
+  }
+
+  int getTotalNumReviews(List reviews) {
+    if (reviews != null) {
+      return reviews.length;
+    }
+    return 0;
   }
 }
 
