@@ -57,6 +57,8 @@ dependencies:
   share: ^0.6.5+4
   font_awesome_flutter: ^8.11.0
   flutter_cache_manager: ^2.1.1
+  cached_network_image: ^2.5.0
+  lint: ^1.0.0
 
 dev_dependencies:
   flutter_test:

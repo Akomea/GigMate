@@ -35,7 +35,9 @@ class ProGigCard extends StatelessWidget {
                     color: kShadowColour)
               ],
               image: DecorationImage(
-                  fit: BoxFit.cover, image: AssetImage(imageUrl))),
+                  fit: BoxFit.cover,
+                  image: ResizeImage(AssetImage(imageUrl),
+                      width: 568, height: 449))),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(

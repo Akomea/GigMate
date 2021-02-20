@@ -4,16 +4,18 @@ import 'package:gigmate/model_notifier.dart';
 import 'package:gigmate/models/producer.dart';
 import 'package:provider/provider.dart';
 
-import './components/credits_pill.dart';
+import 'components/credits_pill.dart';
 
-class StudioMainScreen extends StatefulWidget {
-  static const String screenId = 'studio_main_screenId';
+enum Category { bands, soloists }
+
+class MusiciansMainScreen extends StatefulWidget {
+  static const String screenId = 'musicians_main_screenId';
 
   @override
-  _StudioMainScreenState createState() => _StudioMainScreenState();
+  _MusiciansMainScreenState createState() => _MusiciansMainScreenState();
 }
 
-class _StudioMainScreenState extends State<StudioMainScreen> {
+class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
   Widget _buildRatingStars(int rating) {
     final List<Widget> stars = [];
 
@@ -36,7 +38,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
         genre: 'Trap, Electronic',
         rating: 1),
     Producer(
-        imageUrl: 'assets/images/jonas.JPG',
+        imageUrl: 'assets/images/producer.jpg',
         name: 'Jonas Ahedor',
         credits: [
           'Siisi Baidoo',
@@ -54,6 +56,8 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
   ];
   ProType proType;
   String dropdownValue = 'All Production Pros';
+  Color activeColour = kPrimaryColour;
+  Color inActiveColour = Colors.transparent;
 
   @override
   void initState() {
@@ -74,175 +78,158 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
     super.initState();
   }
 
+  Category selectedCategory = Category.bands;
+
   @override
   Widget build(BuildContext context) {
-    final ModelNotifier modelNotifier =
-        Provider.of<ModelNotifier>(context, listen: false);
+    Size _size = MediaQuery.of(context).size;
+    const double _filterContainerHeight = 55.0;
+    // final ModelNotifier modelNotifier =
+    //     Provider.of<ModelNotifier>(context, listen: false);
 
-    AssetImage getImage() {
-      switch (proType) {
-        case ProType.producer:
-          return const AssetImage('assets/images/producer.jpg');
-          break;
-        case ProType.session:
-          return const AssetImage('assets/images/session.jpg');
-          break;
-        case ProType.mixing:
-          return const AssetImage('assets/images/mixing.jpg');
-          break;
-        case ProType.all:
-          return const AssetImage('assets/images/producer_detail.png');
-          break;
-      }
-      return null;
-    }
+    // AssetImage getImage() {
+    //   switch (selectedCategory) {
+    //     case Category.bands:
+    //       return const AssetImage('assets/images/band_head.jpg');
+    //       break;
+    //     case Category.soloists:
+    //       return const AssetImage('assets/images/kyekyeku1.jpg');
+    //       break;
+    //   }
+    //   return null;
+    // }
 
     return Scaffold(
       body: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+          Container(
+            height: MediaQuery.of(context).size.height * 0.38,
+            child: Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.32,
+                  width: MediaQuery.of(context).size.width,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(30),
+                          // ignore: prefer_const_literals_to_create_immutables
+                          boxShadow: [
+                        const BoxShadow(
+                          color: kInactiveColour,
+                          blurRadius: 10.0,
+                          offset: Offset(0.0, 2.0),
+                        )
+                      ]),
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: kInactiveColour,
-                        blurRadius: 10.0,
-                        offset: Offset(0.0, 2.0),
-                      )
-                    ]),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image(
-                    image: getImage(),
-                    fit: BoxFit.cover,
+                    child: const Image(
+                      image: AssetImage('assets/images/kyekyeku1.jpg'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  color: Colors.black.withOpacity(0.4),
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                      color: Colors.black.withOpacity(0.2),
+                      height: MediaQuery.of(context).size.height * 0.32,
+                      width: MediaQuery.of(context).size.width),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        proType == ProType.producer
-                            ? 'Top Producers'
-                            : proType == ProType.session
-                                ? 'Tracking Musicians'
-                                : proType == ProType.mixing
-                                    ? 'Hit Standard Pros'
-                                    : 'Finish that Song',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30),
-                      ),
-                      Container(
-                        width: 250,
-                        child: Text(
-                          proType == ProType.producer
-                              ? 'Hire top producers ready to make a hit out of your song idea'
-                              : proType == ProType.session
-                                  ? 'Hand-picked musicians to record custom tracks on your song'
-                                  : proType == ProType.mixing
-                                      ? 'Hire hit-making mixing engineers to transform your recorded tracks into radio-ready songs'
-                                      : 'Find your next music production professional to work with',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'OpenSans',
-                              fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back_outlined),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0, vertical: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      color: Colors.white,
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back_outlined),
-                    ),
-                    Row(
+                Positioned(
+                  left: _size.width * 0.10,
+                  right: _size.width * 0.10,
+                  top: 200,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              offset: const Offset(6, 0),
+                              blurRadius: 9,
+                              spreadRadius: 1,
+                              color: kInactiveColour.withOpacity(0.4))
+                        ],
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    height: _filterContainerHeight,
+                    child: Row(
                       children: [
-                        DropdownButton(
-                          value: dropdownValue,
-                          dropdownColor: Colors.black,
-                          focusColor: kSecondaryColour,
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.white),
-                          underline: Container(),
-                          icon: const Icon(
-                            Icons.sort,
-                            color: Colors.white,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedCategory = Category.bands;
+                              });
+                              debugPrint('Bands selected');
+                            },
+                            child: FilterButton(
+                              text: 'Bands',
+                              containerColour:
+                                  selectedCategory == Category.bands
+                                      ? activeColour
+                                      : inActiveColour,
+                              textColour: selectedCategory == Category.bands
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                              shadow: selectedCategory == Category.bands
+                                  ? kFilterButtonShadow
+                                  : kNoShadow,
+                            ),
                           ),
-                          items: <String>[
-                            'All Production Pros',
-                            'Music Producers',
-                            'Session Musicians',
-                            'Mixing & Mastering'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Text(value),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              switch (value.toString()) {
-                                case 'All Production Pros':
-                                  modelNotifier.proType = ProType.all;
-                                  break;
-                                case 'Music Producers':
-                                  modelNotifier.proType = ProType.producer;
-                                  break;
-                                case 'Session Musicians':
-                                  modelNotifier.proType = ProType.session;
-                                  break;
-                                case 'Mixing & Mastering':
-                                  modelNotifier.proType = ProType.mixing;
-                                  break;
-                              }
-                              dropdownValue = value.toString();
-                              debugPrint(value.toString());
-                            });
-                          },
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedCategory = Category.soloists;
+                              });
+                              debugPrint('Soloists selected');
+                            },
+                            child: FilterButton(
+                              text: 'Soloists',
+                              containerColour:
+                                  selectedCategory == Category.soloists
+                                      ? activeColour
+                                      : inActiveColour,
+                              textColour: selectedCategory == Category.soloists
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                              shadow: selectedCategory == Category.soloists
+                                  ? kFilterButtonShadow2
+                                  : kNoShadow,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Expanded(
             child: ListView.builder(
-                padding: EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
                 itemCount: producers.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Producer pro = producers[index];
+                  final Producer pro = producers[index];
                   return Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(30.0, 5.0, 20.0, 5.0),
+                        margin: const EdgeInsets.fromLTRB(30.0, 5.0, 20.0, 5.0),
                         height: MediaQuery.of(context).size.height * 0.18,
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -268,7 +255,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                                         width: 120,
                                         child: Text(
                                           pro.name,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 20),
                                           maxLines: 2,
@@ -292,11 +279,11 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                                     children: [
                                       Text(
                                         '\$${pro.price.toString()}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      Text(
+                                      const Text(
                                         'per hour',
                                         style: TextStyle(color: Colors.grey),
                                       )
@@ -323,7 +310,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                               borderRadius: BorderRadius.circular(20.0),
                               boxShadow: [
                                 BoxShadow(
-                                    offset: Offset(6, 0),
+                                    offset: const Offset(6, 0),
                                     blurRadius: 9,
                                     spreadRadius: 1,
                                     color: kInactiveColour.withOpacity(0.4))
@@ -331,7 +318,6 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.0),
                             child: Image(
-                              filterQuality: FilterQuality.low,
                               width: 110,
                               image: AssetImage(pro.imageUrl),
                               fit: BoxFit.cover,
@@ -346,5 +332,30 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
         ],
       ),
     );
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  final Color containerColour;
+  final List<BoxShadow> shadow;
+  final Color textColour;
+  final String text;
+
+  const FilterButton(
+      {this.containerColour, this.shadow, this.textColour, this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    const double _filterContainerHeight = 55.0;
+    return Container(
+        height: _filterContainerHeight,
+        decoration: BoxDecoration(
+            color: containerColour,
+            boxShadow: shadow,
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: Center(
+            child: Text(text,
+                style: TextStyle(
+                    color: textColour, fontWeight: FontWeight.w600))));
   }
 }

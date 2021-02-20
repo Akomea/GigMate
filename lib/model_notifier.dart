@@ -3,7 +3,13 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:gigmate/models/solo_musician.dart';
 
+enum ProType { session, producer, mixing, all }
+enum MusicianType { band, soloist }
+
 class ModelNotifier with ChangeNotifier {
+  ProType proType = ProType.all;
+  MusicianType musicianType = MusicianType.soloist;
+
   List<SoloMusician> _soloMusicianList = [];
   SoloMusician _currentSoloMusician;
 

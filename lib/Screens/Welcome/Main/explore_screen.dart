@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gigmate/Screens/Welcome/Main/components/card_header_text.dart';
-import 'package:gigmate/Screens/Welcome/Main/components/categories_widget.dart';
 import 'package:gigmate/Screens/Welcome/Main/components/gig_solo_card.dart';
 import 'package:gigmate/Screens/Welcome/Main/components/pro_gig_card.dart';
 import 'package:gigmate/components/gig_card.dart';
@@ -11,9 +10,11 @@ import 'package:gigmate/model_api.dart';
 import 'package:gigmate/model_notifier.dart';
 import 'package:provider/provider.dart';
 
+import './components/categories_widget.dart';
 import './studio_main_screen.dart';
 import '../../../constants.dart';
 import 'band_detail_screen.dart';
+import 'places_screen.dart';
 import 'solo_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -24,14 +25,13 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
-    var scrollableCardContainerSize = _size.height * 0.38;
-    ModelNotifier modelNotifier =
+    final Size _size = MediaQuery.of(context).size;
+    final scrollableCardContainerSize = _size.height * 0.38;
+    final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: true);
 
     return Scaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
             children: [
@@ -48,10 +48,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
               child: Column(
                 children: [
                   CategoriesWidget(),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  CardHeaderText(
+                  const CardHeaderText(
                     leading: 'Featured National Partners',
                     trailing: Icons.arrow_right_alt_rounded,
                   ),
@@ -104,14 +104,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       ),
                     ),
                   ),
-                  CardHeaderText(
+                  const CardHeaderText(
                     leading: 'Popular Solo Musicians',
                     trailing: Icons.arrow_right_alt_rounded,
                   ),
                   Container(
                       //Container for scrollable row
-                      height: _size.height * 0.35,
-                      padding: EdgeInsets.only(left: 5.0),
+                      height: _size.height * kGigSoloCardContainerHeight,
+                      padding: const EdgeInsets.only(left: 5.0),
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: modelNotifier.soloMusicianList.length,
@@ -121,7 +121,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 name:
                                     modelNotifier.soloMusicianList[index].name,
                                 imageUrl: modelNotifier
-                                    .soloMusicianList[index].media[1],
+                                        .soloMusicianList[index].media[1]
+                                        .toString() ??
+                                    'assets/images/kwame.jpg',
                                 role:
                                     modelNotifier.soloMusicianList[index].role,
                                 onTap: () {
@@ -131,22 +133,36 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                       context, SoloDetailScreen.screenId);
                                 });
                           })),
-                  CardHeaderText(
+                  const CardHeaderText(
                     leading: 'Places & Events',
                   ),
                   Container(
+                    margin: EdgeInsets.only(bottom: _size.height * 0.02),
+                    width: _size.width * 0.95,
+                    height: _size.height * 0.60,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5.0)),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset.fromDirection(2, 5),
+                              blurRadius: 9,
+                              spreadRadius: 2,
+                              color: kShadowColour)
+                        ],
+                        image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/images/kwashibu.jpg'))),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Align(
-                          alignment: Alignment.center,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 80, horizontal: 20),
                             child: Column(
                               children: [
                                 RichText(
-                                  text: TextSpan(children: [
+                                  text: const TextSpan(children: [
                                     TextSpan(
                                         text: 'Go',
                                         style: TextStyle(
@@ -161,10 +177,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                             fontWeight: FontWeight.bold)),
                                   ]),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
-                                Text(
+                                const Text(
                                   'Find your next chill-out venues, concerts,\n'
                                   'gospel shows and live music events',
                                   style: TextStyle(
@@ -172,29 +188,34 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                       fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
-                                Container(
-                                  child: Center(
-                                    child: Text('Explore',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: kPurpleTextColour)),
+                                FlatButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () => Navigator.pushNamed(
+                                      context, PlacesScreen.screenId),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            offset: Offset.fromDirection(8, 2),
+                                            color: kPurpleTextColour,
+                                            blurRadius: 30,
+                                            spreadRadius: 5)
+                                      ],
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    width: 100,
+                                    height: 30,
+                                    child: const Center(
+                                      child: Text('Explore',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: kPurpleTextColour)),
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                          offset: Offset.fromDirection(8, 2),
-                                          color: kPurpleTextColour,
-                                          blurRadius: 30,
-                                          spreadRadius: 5)
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  width: 100,
-                                  height: 30,
                                 ),
                               ],
                             ),
@@ -202,30 +223,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         ),
                       ],
                     ),
-                    margin: EdgeInsets.only(bottom: _size.height * 0.02),
-                    width: _size.width * 0.95,
-                    height: _size.height * 0.60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset.fromDirection(2, 5),
-                              blurRadius: 9,
-                              spreadRadius: 2,
-                              color: kShadowColour)
-                        ],
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('assets/images/kwashibu.jpg'))),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    margin: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.only(top: 20),
                     child: Row(
                       //Card category text
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Discover top music production pros',
+                        const Text('Discover top music production pros',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -242,19 +248,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     height: _size.height * 0.40,
                     child: CarouselSlider(
                         items: [
-                          Hero(
-                            tag: 'studio',
-                            child: ProGigCard(
-                              onTap: () => Navigator.pushNamed(
-                                  context, StudioMainScreen.screenId),
-                              size: _size,
-                              imageUrl: 'assets/images/producer.jpg',
-                              cardTitle: 'Producers',
-                              description:
-                                  'Hire and work with top producers ready to turn your song or idea into a hit',
-                            ),
+                          ProGigCard(
+                            onTap: () {
+                              modelNotifier.proType = ProType.producer;
+                              Navigator.pushNamed(
+                                  context, StudioMainScreen.screenId);
+                            },
+                            size: _size,
+                            imageUrl: 'assets/images/producer.jpg',
+                            cardTitle: 'Producers',
+                            description:
+                                'Hire and work with top producers ready to turn your song or idea into a hit',
                           ),
                           ProGigCard(
+                            onTap: () {
+                              modelNotifier.proType = ProType.session;
+                              Navigator.pushNamed(
+                                  context, StudioMainScreen.screenId);
+                            },
                             size: _size,
                             imageUrl: 'assets/images/session.jpg',
                             cardTitle: 'Session Musicians',
@@ -263,11 +274,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 'string arrangers, and countless top instrumentalists to hire',
                           ),
                           ProGigCard(
+                            onTap: () {
+                              modelNotifier.proType = ProType.mixing;
+                              Navigator.pushNamed(
+                                  context, StudioMainScreen.screenId);
+                            },
                             size: _size,
                             imageUrl: 'assets/images/mixing.jpg',
                             cardTitle: 'Mixing & Mastering Engineers',
                             description:
-                                'Hire hit- making mixing engineers that will transform your recorded tracks into release - ready songs',
+                                'Hire hit-making mixing engineers that will transform your recorded tracks into release-ready songs',
                           ),
                         ],
                         options: CarouselOptions(
@@ -283,11 +299,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  ModelApi _modelApi = ModelApi();
+  final ModelApi _modelApi = ModelApi();
 
   @override
   void initState() {
-    ModelNotifier modelNotifier =
+    final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
     _modelApi.getSoloMusicians(modelNotifier);
     super.initState();

@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,6 +14,7 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
+import './components/credits_pill.dart';
 import '../../../components/normal_roundedbutton.dart';
 
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -41,31 +43,31 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
   bool _isPlayButtonVisible;
   double _buttonOpacity = 1.0;
 
-  CarouselController _buttonCarouselController = CarouselController();
+  final CarouselController _buttonCarouselController = CarouselController();
 
   int carouselIndex;
   ConnectivityStatus connectionStatus;
 
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
-    double _bottomContainerHeight = 60;
+    final Size _size = MediaQuery.of(context).size;
+    const double _bottomContainerHeight = 60;
     connectionStatus = Provider.of<ConnectivityStatus>(context);
-    ModelNotifier modelNotifier =
+    final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: true);
-    var reviews = modelNotifier.currentSoloMusician.reviews;
+    final reviews = modelNotifier.currentSoloMusician.reviews;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: InkWell(
-          child: Icon(Icons.arrow_back),
           onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.ios_share,
             ),
             onPressed: () {
@@ -74,8 +76,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
             },
           ),
           IconButton(
-            padding: EdgeInsets.only(right: 10),
-            icon: Icon(
+            padding: const EdgeInsets.only(right: 10),
+            icon: const Icon(
               Icons.favorite_border_rounded,
             ),
             onPressed: () {},
@@ -98,114 +100,94 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                   FutureBuilder(
                     future: _initializeVideoPlayerFuture,
                     builder: (context, snapshot) {
-                      print(snapshot.error);
-                      print(snapshot.connectionState);
+                      debugPrint(snapshot.error.toString());
+                      debugPrint(snapshot.connectionState.toString());
 
                       if (snapshot.connectionState == ConnectionState.done) {
                         // If the VideoPlayerController has finished initialization, use
                         // the data it provides to limit the aspect ratio of the VideoPlayer.
-                        if (snapshot.connectionState == ConnectionState.none) {
-                          print('error is: KENN!!! ${snapshot.error}');
+                        return AspectRatio(
+                          aspectRatio: _videoPlayerController.value.aspectRatio,
+                          // Use the VideoPlayer widget to display the video.
+                          child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (_isPlayButtonVisible) {
+                                    _buttonOpacity = 0.0;
+                                  } else if (!_isPlayButtonVisible) {
+                                    _buttonOpacity = 1.0;
+                                  }
+                                });
+                                _isPlayButtonVisible = !_isPlayButtonVisible;
+                                delayTime();
+                              },
+                              child: Stack(
+                                children: [
+                                  VideoPlayer(_videoPlayerController),
+                                  Positioned(
+                                    child: Center(
+                                      child: AnimatedOpacity(
+                                        opacity: _buttonOpacity,
+                                        duration: const Duration(seconds: 1),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _playPause
+                                                  ? _animationController
+                                                      .reverse()
+                                                  : _animationController
+                                                      .forward();
 
-                          return Container(
-                            color: Colors.black.withOpacity(0.5),
-                            height: _size.height,
-                            width: _size.width,
-                            child: Center(
-                              child: Text(
-                                'Unable to play video',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        } else {
-                          _videoPlayerController.initialize();
-                          _videoPlayerController.play();
-                          _videoPlayerController.setLooping(true);
-                          return AspectRatio(
-                            aspectRatio:
-                                _videoPlayerController.value.aspectRatio,
-                            // Use the VideoPlayer widget to display the video.
-                            child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (_isPlayButtonVisible) {
-                                      _buttonOpacity = 0.0;
-                                    } else if (!_isPlayButtonVisible) {
-                                      _buttonOpacity = 1.0;
-                                    }
-                                  });
-                                  _isPlayButtonVisible = !_isPlayButtonVisible;
-                                  delayTime();
-                                },
-                                child: Stack(
-                                  children: [
-                                    VideoPlayer(_videoPlayerController),
-                                    Positioned(
-                                      child: Center(
-                                        child: AnimatedOpacity(
-                                          opacity: _buttonOpacity,
-                                          duration: Duration(seconds: 1),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                _playPause
-                                                    ? _animationController
-                                                        .reverse()
-                                                    : _animationController
-                                                        .forward();
-
-                                                if (_videoPlayerController
-                                                    .value.isPlaying) {
-                                                  _videoPlayerController
-                                                      .pause();
-                                                  _playPause = false;
-                                                  _buttonOpacity = 1;
-                                                } else {
-                                                  // If the video is paused, play it.
-                                                  _videoPlayerController.play();
-                                                  _playPause = true;
-                                                  _buttonOpacity = 1;
-                                                  delayTime();
-                                                }
-                                              });
-                                              _playPause = !_playPause;
-                                            },
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.white.withOpacity(0.7),
-                                              radius: 36,
-                                              child: AnimatedIcon(
-                                                icon: AnimatedIcons.pause_play,
-                                                color: kAccent,
-                                                size: 45,
-                                                progress: curve,
-                                              ),
+                                              if (_videoPlayerController
+                                                  .value.isPlaying) {
+                                                _videoPlayerController.pause();
+                                                _playPause = false;
+                                                _buttonOpacity = 1;
+                                              } else {
+                                                // If the video is paused, play it.
+                                                _videoPlayerController.play();
+                                                _playPause = true;
+                                                _buttonOpacity = 1;
+                                                delayTime();
+                                              }
+                                            });
+                                            _playPause = !_playPause;
+                                          },
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                Colors.white.withOpacity(0.7),
+                                            radius: 36,
+                                            child: AnimatedIcon(
+                                              icon: AnimatedIcons.pause_play,
+                                              color: kAccent,
+                                              size: 45,
+                                              progress: curve,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )),
-                          );
-                        }
+                                  ),
+                                ],
+                              )),
+                        );
                       } else {
                         // If the VideoPlayerController is still initializing, show a
                         // loading spinner.
-                        print(snapshot.error);
-                        print(snapshot.connectionState);
+                        debugPrint(snapshot.error.toString());
+                        debugPrint(snapshot.connectionState.toString());
 
                         return Stack(
                           children: [
-                            Image.network(
-                              '${modelNotifier.currentSoloMusician.media[1]}',
-                              //FIRST IMAGE AS LOADING PLACEHOLDER
+                            CachedNetworkImage(
+                              imageUrl: modelNotifier
+                                  .currentSoloMusician.media[1]
+                                  .toString(),
                               height: _size.height,
                               width: _size.width,
                               fit: BoxFit.cover,
                             ),
-                            Center(child: CircularProgressIndicator()),
+                            const Center(child: CircularProgressIndicator()),
                           ],
                         );
                       }
@@ -223,14 +205,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                   aspectRatio: _size.width,
                   viewportFraction: 1.0,
                   initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: false,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: false,
-                  scrollDirection: Axis.horizontal,
+                  autoPlayInterval: const Duration(seconds: 3),
                 ),
               ),
             ),
@@ -244,7 +219,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                 // Calculate FAB position based on parent widget height and DraggableScrollable position
                 _fabPosition = _dragScrollSheetExtent * _widgetHeight;
               });
-              print('$notification yayy, I\'m moving!!');
+              debugPrint('$notification yayy, I\'m moving!!');
               return;
             },
             child: DraggableScrollableSheet(
@@ -255,12 +230,12 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                 _scrollController = controller;
                 return ClipRRect(
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                        const BorderRadius.vertical(top: Radius.circular(20)),
                     child: SingleChildScrollView(
                       controller: _scrollController,
                       child: Container(
                         color: Colors.white,
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             top: 80,
                             left: 25,
                             right: 25,
@@ -268,7 +243,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Align(
+                            const Align(
                               alignment: Alignment.topLeft,
                               child: Text(
                                 'About',
@@ -279,33 +254,33 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                     color: Colors.black),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 2,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Text(
-                              '${modelNotifier.currentSoloMusician.description}',
-                              style: TextStyle(
+                              modelNotifier.currentSoloMusician.description,
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                   fontFamily: 'OpenSans'),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
-                            Divider(
+                            const Divider(
                               endIndent: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Text(
                               'Style: ${modelNotifier.currentSoloMusician.style}',
                               style: kDetailTextStyle,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Container(
@@ -314,13 +289,13 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                   'Other Instruments: ${modelNotifier.currentSoloMusician.secondaryInstruments}',
                                   style: kDetailTextStyle,
                                 )),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Divider(
+                            const Divider(
                               endIndent: 20,
                             ),
-                            Text(
+                            const Text(
                               'Credits',
                               style: TextStyle(
                                   fontSize: 18,
@@ -328,12 +303,14 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                   color: Colors.black54,
                                   fontFamily: 'Roboto'),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            getCredits(
-                                modelNotifier.currentSoloMusician.credits),
-                            Divider(
+                            CreditsPill.getCredits(
+                                modelNotifier.currentSoloMusician.credits,
+                                6,
+                                30),
+                            const Divider(
                               endIndent: 20,
                             ),
                             Row(
@@ -343,7 +320,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                   reviews != null
                                       ? 'Clients\' Reviews'
                                       : 'No Reviews',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black54,
@@ -355,7 +332,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                     reviews != null
                                         ? 'Show All'
                                         : 'Rate & Review',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: kAccent,
@@ -364,20 +341,21 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                                 ),
                               ],
                             ),
-                            reviews != null
-                                ? CarouselSlider(
-                                    items: getReviewList(reviews),
-                                    options: CarouselOptions(
-                                      height: 230,
-                                      viewportFraction: 0.78,
-                                    ),
-                                  )
-                                : Container(
-                                    child: Center(
-                                      child: Image.asset(
-                                          'assets/images/emptyState.PNG'),
-                                    ),
-                                  )
+                            if (reviews != null)
+                              CarouselSlider(
+                                items: getReviewList(reviews),
+                                options: CarouselOptions(
+                                  height: 230,
+                                  viewportFraction: 0.78,
+                                ),
+                              )
+                            else
+                              Container(
+                                child: Center(
+                                  child: Image.asset(
+                                      'assets/images/emptyState.PNG'),
+                                ),
+                              )
                           ],
                         ),
                       ),
@@ -392,25 +370,25 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                 width: _size.width * 0.9,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(width: 3, color: Colors.white12),
-                  shape: BoxShape.rectangle,
                   boxShadow: [
                     BoxShadow(
                         blurRadius: 15,
                         spreadRadius: 6,
-                        color: Color(0xFF666696).withOpacity(0.25),
-                        offset: Offset(3, 7.0)),
+                        color: const Color(0xFF666696).withOpacity(0.25),
+                        offset: const Offset(3, 7.0)),
                     BoxShadow(
                         blurRadius: 10,
                         spreadRadius: 3,
                         color: kSecondaryColour.withOpacity(0.15),
-                        offset: Offset(-3, -7.0)),
+                        offset: const Offset(-3, -7.0)),
                   ],
                 ),
                 child: SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -521,7 +499,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
   io.File vidUrl = io.File(path);
 
   Future getDownloadedUrl(String url) async {
-    var fetchedFile = await DefaultCacheManager().getSingleFile(url);
+    final fetchedFile = await DefaultCacheManager().getSingleFile(url);
     setState(() {
       vidUrl = fetchedFile;
       path = fetchedFile.path;
@@ -531,7 +509,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
 
   @override
   void initState() {
-    ModelNotifier modelNotifier =
+    final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
 
     //getDownloadedUrl(modelNotifier.currentSoloMusician.media[0]);
@@ -587,14 +565,15 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
       for (var review in reviews) {
         sumStars += review['numStars'];
       }
-    } else
+    } else {
       return 0.0;
+    }
     average = sumStars / getTotalNumReviews(reviews);
     return average;
   }
 
   List<Widget> getReviewList(List reviews) {
-    List<Widget> reviewList = [];
+    final List<Widget> reviewList = [];
     if (reviews != null) {
       for (var review in reviews) {
         reviewList.add(
@@ -622,15 +601,15 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
 }
 
 Widget getStars(int numStars) {
-  int totalStars = 5;
-  int numEmptyStars = totalStars - numStars;
-  List<Icon> rating = [];
-  Icon fullStar = Icon(
+  const int totalStars = 5;
+  final int numEmptyStars = totalStars - numStars;
+  final List<Icon> rating = [];
+  const Icon fullStar = Icon(
     Icons.star,
     size: 18,
     color: kAccent,
   );
-  Icon emptyStar = Icon(
+  const Icon emptyStar = Icon(
     Icons.star_border_outlined,
     size: 18,
     color: kAccent,
@@ -643,7 +622,7 @@ Widget getStars(int numStars) {
       rating.add(emptyStar);
     }
   } else {
-    print('error in stars count');
+    debugPrint('error in stars count');
   }
   return Row(
     children: rating,
@@ -658,7 +637,7 @@ class ReviewCard extends StatelessWidget {
   final numStars;
   final String eventType;
 
-  ReviewCard(
+  const ReviewCard(
       {this.reviewerName,
       this.reviewerImageUrl,
       this.summary,
@@ -671,12 +650,14 @@ class ReviewCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        decoration: const BoxDecoration(
+            boxShadow: kTextFieldContainerShadow, color: Colors.white),
+        margin: EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
@@ -689,16 +670,16 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Text(
                       reviewerName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     Text(
                       eventType,
-                      style: TextStyle(color: Colors.black54),
+                      style: const TextStyle(color: Colors.black54),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     getStars(numStars),
@@ -706,7 +687,7 @@ class ReviewCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Expanded(
@@ -716,18 +697,18 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Text(
                       summary,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black54,
                           fontFamily: 'Roboto'),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Expanded(
                       child: Container(
                         child: Text(
                           review,
-                          style: TextStyle(fontFamily: 'OpenSans'),
+                          style: const TextStyle(fontFamily: 'OpenSans'),
                         ),
                       ),
                     ),
@@ -737,9 +718,6 @@ class ReviewCard extends StatelessWidget {
             ),
           ],
         ),
-        decoration: BoxDecoration(
-            boxShadow: kTextFieldContainerShadow, color: Colors.white),
-        margin: EdgeInsets.all(10),
       ),
     );
   }
@@ -753,66 +731,35 @@ class Availability extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ModelNotifier modelNotifier =
+    final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
-    Icon available = Icon(
+    const Icon available = Icon(
       Icons.event_available,
       color: Colors.green,
     );
-    Icon unavailable = Icon(
+    const Icon unavailable = Icon(
       Icons.event_busy,
       color: Colors.redAccent,
     );
     return Row(
       children: [
         Padding(
-          padding: EdgeInsets.only(right: 5),
+          padding: const EdgeInsets.only(right: 5),
           child: modelNotifier.currentSoloMusician.availability == true
               ? available
               : unavailable,
         ),
-        modelNotifier.currentSoloMusician.availability == true
-            ? Text(
-                'Available',
-                style: TextStyle(color: Colors.green),
-              )
-            : Text(
-                'Unavailable',
-                style: TextStyle(color: Colors.redAccent),
-              )
+        if (modelNotifier.currentSoloMusician.availability == true)
+          const Text(
+            'Available',
+            style: TextStyle(color: Colors.green),
+          )
+        else
+          const Text(
+            'Unavailable',
+            style: TextStyle(color: Colors.redAccent),
+          )
       ],
-    );
-  }
-}
-
-Widget getCredits(List credits) {
-  List<CreditsPill> creditList = List<CreditsPill>();
-  for (var credit in credits) {
-    creditList.add(new CreditsPill(
-      name: credit,
-    ));
-  }
-  return Row(children: creditList);
-}
-
-class CreditsPill extends StatelessWidget {
-  final String name;
-
-  const CreditsPill({Key key, this.name}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: kInactiveColour.withOpacity(0.2),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      margin: EdgeInsets.only(right: 10),
-      padding: EdgeInsets.all(6),
-      height: 30,
-      child: Text(
-        name,
-        style: TextStyle(color: kPrimaryColour),
-      ),
     );
   }
 }

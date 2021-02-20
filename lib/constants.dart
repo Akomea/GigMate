@@ -24,6 +24,20 @@ const kHeaderStyle = TextStyle(
   fontSize: 25.0,
   color: kPrimaryColour,
 );
+const kFilterButtonShadow = [
+  BoxShadow(
+      offset: Offset(5, 0),
+      blurRadius: 9,
+      spreadRadius: 1,
+      color: kInactiveColour)
+];
+const kFilterButtonShadow2 = [
+  BoxShadow(
+      offset: Offset(-5, 0),
+      blurRadius: 9,
+      spreadRadius: 1,
+      color: kInactiveColour)
+];
 const kDetailTextStyle = TextStyle(color: Colors.black, fontFamily: 'OpenSans');
 const kQuestionStyle = TextStyle(
     fontWeight: FontWeight.w600,
@@ -57,3 +71,4 @@ const kHintTextDecoration = InputDecoration(
     ));
 const double kBudgetButtonHeight = 0.055;
 const double kBudgetButtonWidth = 0.13;
+const double kGigSoloCardContainerHeight = 0.35;

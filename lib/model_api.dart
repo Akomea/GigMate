@@ -1,19 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model_notifier.dart';
-import 'models/rating.dart';
 import 'models/solo_musician.dart';
 
 class ModelApi {
   getSoloMusicians(ModelNotifier modelNotifier) async {
     FirebaseFirestore rootRef = FirebaseFirestore.instance;
-    Settings settings = Settings(persistenceEnabled: true);
-    rootRef.settings = settings;
+    rootRef.settings = Settings(persistenceEnabled: true);
     rootRef.snapshotsInSync();
     QuerySnapshot snapshot = await rootRef.collection('soloMusician').get();
 
     List<SoloMusician> _soloists = [];
-    List<Rating> _ratings = [];
     snapshot.docs.forEach((document) {
       SoloMusician soloMusician = SoloMusician.fromMap(document.data());
       // _ratings = documentSnapshot['reviews'].map<Rating>((item) {
@@ -24,7 +21,6 @@ class ModelApi {
     if (snapshot.metadata.isFromCache) {
       print('YES! YES! I AM FROM CACHE');
     }
-
     modelNotifier.soloMusicianList = _soloists;
   }
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
 import 'package:gigmate/constants.dart';
 
-import '../../../components/headlineText.dart';
+import '../../../components/headline_text.dart';
 import '../../../components/normal_roundedbutton.dart';
 import '../Main/home_screen.dart';
 import 'background.dart';

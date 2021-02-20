@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gigmate/constants.dart';
 
 class GigSoloCard extends StatelessWidget {
@@ -24,6 +26,25 @@ class GigSoloCard extends StatelessWidget {
       child: Container(
         child: Stack(
           children: [
+            Container(
+              height: _size.height * kGigSoloCardContainerHeight,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  memCacheWidth: 500,
+                  memCacheHeight: 349,
+                  fit: BoxFit.cover,
+                  imageUrl: imageUrl,
+                  placeholder: (context, loading) {
+                    return Center(
+                      child: SpinKitChasingDots(
+                        color: kSecondaryColour,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
             Container(
               //black mask on card
               decoration: BoxDecoration(
@@ -74,16 +95,16 @@ class GigSoloCard extends StatelessWidget {
           ],
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset.fromDirection(2, 5),
-                  blurRadius: 9,
-                  spreadRadius: 2,
-                  color: kShadowColour)
-            ],
-            image: DecorationImage(
-                fit: BoxFit.cover, image: NetworkImage(imageUrl))),
+          // image: DecorationImage(image: NetworkImage(imageUrl)),
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          boxShadow: [
+            BoxShadow(
+                offset: Offset.fromDirection(2, 5),
+                blurRadius: 9,
+                spreadRadius: 2,
+                color: kShadowColour)
+          ],
+        ),
         margin: EdgeInsets.symmetric(horizontal: 5),
         width: _size.width * 0.46,
       ),

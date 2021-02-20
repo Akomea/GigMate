@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gigmate/constants.dart';
+
+import '../constants.dart';
 
 class HeadlineText extends StatelessWidget {
   final String text;

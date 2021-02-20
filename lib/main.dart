@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
+import 'package:gigmate/Screens/Welcome/Main/musicians_main_screen.dart';
 import 'package:gigmate/Screens/Welcome/welcome_screen.dart';
 import 'package:gigmate/model_notifier.dart';
 import 'package:gigmate/post_gig_notifier.dart';
@@ -8,6 +11,7 @@ import 'package:gigmate/services/connectivity_service.dart';
 import 'package:gigmate/services/firestorage_service.dart';
 import 'package:provider/provider.dart';
 
+import './Screens/./Welcome/./Main/places_screen.dart';
 import './Screens/Welcome/Main/band_detail_screen.dart';
 import './Screens/Welcome/Main/solo_detail_screen.dart';
 import 'Screens/Welcome/Main/home_screen.dart';
@@ -19,6 +23,7 @@ import 'user_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -43,7 +48,7 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider<ConnectivityStatus>(
           create: (context) =>
-              ConnectivityService().connectionStatusController.stream,
+          ConnectivityService().connectionStatusController.stream,
         )
       ],
       child: MaterialApp(
@@ -65,6 +70,8 @@ class MyApp extends StatelessWidget {
           DetailScreen.screenId: (context) => DetailScreen(),
           SoloDetailScreen.screenId: (context) => SoloDetailScreen(),
           StudioMainScreen.screenId: (context) => StudioMainScreen(),
+          PlacesScreen.screenId: (context) => PlacesScreen(),
+          MusiciansMainScreen.screenId: (context) => MusiciansMainScreen(),
         },
       ),
     );
