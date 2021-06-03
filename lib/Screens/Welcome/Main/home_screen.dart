@@ -7,7 +7,6 @@ import 'package:gigmate/constants.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'PostGig/post_gig_welcome_screen.dart';
-
 // import 'PostGig/post_gig_screen.dart';
 import 'explore_screen.dart';
 import 'fav_screen.dart';
@@ -24,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 0;
+  static int currentIndex = 0;
   PageController _pageController = PageController();
 
   List<IconData> iconsList = [

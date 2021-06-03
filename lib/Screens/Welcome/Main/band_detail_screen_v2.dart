@@ -5,27 +5,32 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:gigmate/components/normal_rounded_button.dart';
+import 'package:gigmate/components/pill_button.dart';
 import 'package:gigmate/constants.dart';
 import 'package:gigmate/enum/connectivity_status.dart';
 import 'package:gigmate/model_notifier.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 //import '../../Welcome/Main/PostGig/post_gig_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import './components/credits_pill.dart';
-import '../../../components/normal_rounded_button.dart';
+import 'PostGig/post_gig_screen.dart';
 
 // import 'package:flutter_svg/flutter_svg.dart';
-class SoloDetailScreen extends StatefulWidget {
-  static const String screenId = 'solo_details_screen_id';
+class BandDetailScreen extends StatefulWidget {
+  static const String screenId = 'band_details_screen_id';
 
   @override
-  _SoloDetailScreenState createState() => _SoloDetailScreenState();
+  _BandDetailScreenState createState() => _BandDetailScreenState();
 }
 
-class _SoloDetailScreenState extends State<SoloDetailScreen>
+class _BandDetailScreenState extends State<BandDetailScreen>
     with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation curve;
@@ -55,7 +60,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
     connectionStatus = Provider.of<ConnectivityStatus>(context);
     final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: true);
-    final reviews = modelNotifier.currentSoloMusician.reviews;
+    final reviews = modelNotifier.currentLiveBand.reviews;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -180,8 +185,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         return Stack(
                           children: [
                             CachedNetworkImage(
-                              imageUrl: modelNotifier
-                                  .currentSoloMusician.media[1]
+                              imageUrl: modelNotifier.currentLiveBand.media[1]
                                   .toString(),
                               height: _size.height,
                               width: _size.width,
@@ -194,7 +198,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                     },
                   ),
                   Image.network(
-                    '${modelNotifier.currentSoloMusician.media[1]}',
+                    '${modelNotifier.currentLiveBand.media[1]}',
                     height: _size.height,
                     width: _size.width,
                     fit: BoxFit.cover,
@@ -261,7 +265,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                               height: 5,
                             ),
                             Text(
-                              modelNotifier.currentSoloMusician.description,
+                              modelNotifier.currentLiveBand.description,
                               style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
@@ -276,17 +280,10 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                             const SizedBox(
                               height: 5,
                             ),
-                            Text(
-                              'Style: ${modelNotifier.currentSoloMusician.style}',
-                              style: kDetailTextStyle,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
                             Container(
                                 width: _size.width * 0.7,
                                 child: Text(
-                                  'Other Instruments: ${modelNotifier.currentSoloMusician.secondaryInstruments}',
+                                  'Other Instruments: ${modelNotifier.currentLiveBand.instruments}',
                                   style: kDetailTextStyle,
                                 )),
                             const SizedBox(
@@ -307,9 +304,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                               height: 10,
                             ),
                             CreditsPill.getCredits(
-                                modelNotifier.currentSoloMusician.credits,
-                                6,
-                                30),
+                                modelNotifier.currentLiveBand.credits, 6, 30),
                             const Divider(
                               endIndent: 20,
                             ),
@@ -395,7 +390,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            '${modelNotifier.currentSoloMusician.name}',
+                            '${modelNotifier.currentLiveBand.name}',
                             style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.bold,
@@ -409,8 +404,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                         Row(
                           children: [
                             Text(
-                                '${modelNotifier.currentSoloMusician.location} | '),
-                            Text(modelNotifier.currentSoloMusician.isPremium
+                                '${modelNotifier.currentLiveBand.location} | '),
+                            Text(modelNotifier.currentLiveBand.isPremium
                                 ? '\$\$\$ | '
                                 : '\$\$ | '),
                             Row(children: [
@@ -437,11 +432,16 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              modelNotifier.currentSoloMusician.role,
+                              modelNotifier.currentLiveBand.genre,
                               style: TextStyle(
                                   color: kAccent, fontWeight: FontWeight.bold),
                             ),
-                            const Availability()
+                            PillButton(
+                              buttonText: 'Check Availability',
+                              onTap: () {
+                                _showMyDialog();
+                              },
+                            )
                           ],
                         )
                       ],
@@ -459,11 +459,18 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
                 color: Colors.white.withOpacity(0.7),
                 child: NormalRoundedButton(
                     bgColour: kSecondaryColour,
-                    buttonText:
-                        'Contact ${modelNotifier.currentSoloMusician.name}',
+                    buttonText: 'Contact ${modelNotifier.currentLiveBand.name}',
                     textColour: kAccent,
                     onPressed: () {
-                      customLaunch('tel:+233509490123');
+                      showCupertinoModalBottomSheet(
+                        barrierColor: Colors.black54,
+                        elevation: 8,
+                        context: context,
+                        builder: (context) => Material(
+                            child: PostGigScreen(
+                          size: _size,
+                        )),
+                      );
                     }),
               ),
             ),
@@ -507,6 +514,82 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
     });
   }
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.all(10),
+          title: Column(
+            children: [
+              Text('Band Schedule'),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  '*Highlighted dates indicate booked dates on which bands are likely unavailable',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: kAccent, fontSize: 12),
+                ),
+              )
+            ],
+          ),
+          content: AbsorbPointer(
+            absorbing: true,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Container(
+                  decoration:
+                      BoxDecoration(color: kSecondaryColour.withOpacity(0.05)),
+                  child: SfDateRangePicker(
+                    onSelectionChanged: (args) => {},
+                    view: DateRangePickerView.month,
+                    enableMultiView: true,
+                    navigationDirection:
+                        DateRangePickerNavigationDirection.vertical,
+                    monthCellStyle: DateRangePickerMonthCellStyle(
+                      blackoutDateTextStyle: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.lineThrough),
+                      blackoutDatesDecoration: BoxDecoration(
+                          color: Colors.red,
+                          border: Border.all(color: kAccent, width: 1),
+                          shape: BoxShape.circle),
+                    ),
+                    selectionMode: DateRangePickerSelectionMode.single,
+                    selectionColor: kAccent,
+                    todayHighlightColor: kAccent,
+                    enablePastDates: false,
+                    rangeSelectionColor: kSecondaryColour,
+                    startRangeSelectionColor: kAccent,
+                    endRangeSelectionColor: kAccent,
+                    monthViewSettings: DateRangePickerMonthViewSettings(
+                        blackoutDates: List<DateTime>()
+                          ..add(DateTime(2021, 01, 18))
+                          ..add(DateTime(2021, 01, 19))
+                          ..add(DateTime(2021, 01, 9))
+                          ..add(DateTime(2021, 01, 15))),
+                  ),
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: MediaQuery.of(context).size.width),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Okay',
+                style: TextStyle(color: kAccent, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     final ModelNotifier modelNotifier =
@@ -517,8 +600,8 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
     delayTime();
     _isPlayButtonVisible = true;
 
-    _videoPlayerController = VideoPlayerController.network(
-        modelNotifier.currentSoloMusician.media[0]);
+    _videoPlayerController =
+        VideoPlayerController.network(modelNotifier.currentLiveBand.media[0]);
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
 
     _animationController = AnimationController(
@@ -745,11 +828,11 @@ class Availability extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 5),
-          child: modelNotifier.currentSoloMusician.availability == true
+          child: modelNotifier.currentLiveBand.availability == true
               ? available
               : unavailable,
         ),
-        if (modelNotifier.currentSoloMusician.availability == true)
+        if (modelNotifier.currentLiveBand.availability == true)
           const Text(
             'Available',
             style: TextStyle(color: Colors.green),

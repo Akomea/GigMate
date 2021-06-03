@@ -7,6 +7,8 @@ class SoloMusician {
   String location;
   List<dynamic> credits;
   List reviews;
+  int rating;
+  int charge;
   bool availability;
   String secondaryInstruments;
   bool isPremium;
@@ -21,6 +23,8 @@ class SoloMusician {
     availability = data['availability'];
     secondaryInstruments = data['secondaryInstruments'];
     reviews = data['reviews'];
+    rating = data['rating'];
+    charge = data['charge'];
     isPremium = data['isPremium'];
     style = data['style'];
   }

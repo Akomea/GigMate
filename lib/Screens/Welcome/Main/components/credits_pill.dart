@@ -19,13 +19,16 @@ class CreditsPill extends StatelessWidget {
       height: pillHeight,
       child: Text(
         name,
-        style: TextStyle(color: kPrimaryColour),
+        style: TextStyle(
+          color: kPrimaryColour,
+        ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
   static Widget getCredits(List credits, double padding, double height) {
-    List<CreditsPill> creditList = List<CreditsPill>();
+    List<CreditsPill> creditList;
     for (String credit in credits) {
       creditList.add(new CreditsPill(
         name: credit.toString(),

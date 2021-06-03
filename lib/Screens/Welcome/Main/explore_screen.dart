@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import './components/categories_widget.dart';
 import './studio_main_screen.dart';
 import '../../../constants.dart';
-import 'band_detail_screen.dart';
+import 'band_detail_screen_v2.dart';
+import 'musicians_main_screen.dart';
 import 'places_screen.dart';
 import 'solo_detail_screen.dart';
 
@@ -43,70 +44,70 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ],
           ),
           Container(
-            height: _size.height * 0.769,
+            height: _size.height * 0.765,
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   CategoriesWidget(),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
-                  const CardHeaderText(
+                  CardHeaderText(
                     leading: 'Featured National Partners',
-                    trailing: Icons.arrow_right_alt_rounded,
+                    trailing: InkWell(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        modelNotifier.musicianType = MusicianType.band;
+                        return MusiciansMainScreen();
+                      })),
+                      child: Text('SEE ALL',
+                          style: TextStyle(
+                            color: kAccent,
+                          )),
+                    ),
                   ),
                   Container(
-                    //Container for scrollable row
-                    height: scrollableCardContainerSize,
-
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
+                      //Container for scrollable row
+                      //height: scrollableCardContainerSize,
+                      height: _size.height * kGigSoloCardContainerHeight,
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: modelNotifier.liveBandList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var _band = modelNotifier.liveBandList[index];
+                          return InkWell(
                             onTap: () {
+                              modelNotifier.currentLiveBand =
+                                  modelNotifier.liveBandList[index];
                               Navigator.pushNamed(
-                                  context, DetailScreen.screenId);
+                                  context, BandDetailScreen.screenId);
                             },
                             child: GigCard(
                               size: _size,
-                              imageUrl: 'assets/images/kwanpa.jpg',
-                              cardTitle: 'Kwan Pa',
-                              description: 'An indigenous band that performs '
-                                  'and promotes the Palmwine music of Ghana in various forms',
-                              location: 'Accra',
+                              imageUrl: _band.media[1],
+                              cardTitle: _band.name,
+                              description: _band.description,
+                              location: _band.location,
                               rating: 4.5,
                               budget: '\$\$\$\$\$',
                             ),
-                          ),
-                          GigCard(
-                            size: _size,
-                            imageUrl: 'assets/images/kyekyeku1.jpg',
-                            cardTitle: 'Kyekyeku',
-                            description:
-                                'My music is integrally Ghanaian highlife with a tangent to Afrobeat. A revival of the vintage sounds from the 1970s',
-                            location: 'Accra',
-                            rating: 4.5,
-                            budget: '\$\$\$\$\$',
-                          ),
-                          GigCard(
-                            size: _size,
-                            imageUrl: 'assets/images/kwashibu2.jpg',
-                            cardTitle: 'Kwashibu Area Band',
-                            description:
-                                'Known as “The Golden Voice Of Africa”, Pat Thomas is a true Ghanaian highlife legend',
-                            location: 'Accra',
-                            rating: 4.5,
-                            budget: '\$\$\$\$\$',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const CardHeaderText(
+                          );
+                        },
+                      )),
+                  CardHeaderText(
                     leading: 'Popular Solo Musicians',
-                    trailing: Icons.arrow_right_alt_rounded,
+                    trailing: InkWell(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        modelNotifier.musicianType = MusicianType.soloist;
+                        return MusiciansMainScreen();
+                      })),
+                      child: Text('SEE ALL',
+                          style: TextStyle(
+                            color: kAccent,
+                          )),
+                    ),
                   ),
                   Container(
                       //Container for scrollable row
@@ -133,8 +134,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                       context, SoloDetailScreen.screenId);
                                 });
                           })),
-                  const CardHeaderText(
+                  CardHeaderText(
                     leading: 'Places & Events',
+                    trailing: null,
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: _size.height * 0.02),
@@ -231,10 +233,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       //Card category text
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Discover top music production pros',
+                        const Text('Discover Music Production Pros',
                             style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
                                 color: kPurpleTextColour,
                                 fontFamily: 'PlayFair')),
                         Icon(
@@ -306,6 +307,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
     _modelApi.getSoloMusicians(modelNotifier);
+    _modelApi.getLiveBands(modelNotifier);
+    _modelApi.getProducers(modelNotifier);
     super.initState();
   }
 }

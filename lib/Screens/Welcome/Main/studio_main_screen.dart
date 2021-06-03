@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gigmate/constants.dart';
 import 'package:gigmate/model_notifier.dart';
-import 'package:gigmate/models/producer.dart';
 import 'package:provider/provider.dart';
 
 import './components/credits_pill.dart';
@@ -27,31 +28,31 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
     return Row(children: stars);
   }
 
-  Producer producer = Producer();
-  List<Producer> producers = [
-    Producer(
-        imageUrl: 'assets/images/producer_detail.png',
-        name: 'Kimo Beats',
-        credits: ['Boboo', 'Lil Kaytee'],
-        genre: 'Trap, Electronic',
-        rating: 1),
-    Producer(
-        imageUrl: 'assets/images/jonas.JPG',
-        name: 'Jonas Ahedor',
-        credits: [
-          'Siisi Baidoo',
-          'Joe Mettle',
-        ],
-        genre: 'Gospel',
-        price: 30,
-        rating: 4),
-    Producer(
-        imageUrl: 'assets/images/kwanpa_guitar.png',
-        name: 'Andy',
-        credits: ['Sarkodie', 'Stonebuoy'],
-        genre: 'Highlife, Palmwine',
-        rating: 3),
-  ];
+  // Producer producer = Producer();
+  // List<Producer> producers = [
+  //   Producer(
+  //       imageUrl: 'assets/images/producer_detail.png',
+  //       name: 'Kimo Beats',
+  //       credits: ['Boboo', 'Lil Kaytee'],
+  //       genre: 'Trap, Electronic',
+  //       rating: 1),
+  //   Producer(
+  //       imageUrl: 'assets/images/jonas.JPG',
+  //       name: 'Jonas Ahedor',
+  //       credits: [
+  //         'Siisi Baidoo',
+  //         'Joe Mettle',
+  //       ],
+  //       genre: 'Gospel',
+  //       price: 30,
+  //       rating: 4),
+  //   Producer(
+  //       imageUrl: 'assets/images/kwanpa_guitar.png',
+  //       name: 'Andy',
+  //       credits: ['Sarkodie', 'Stonebuoy'],
+  //       genre: 'Highlife, Palmwine',
+  //       rating: 3),
+  // ];
   ProType proType;
   String dropdownValue = 'All Production Pros';
 
@@ -59,6 +60,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
   void initState() {
     final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: false);
+
     proType = modelNotifier.proType;
 
     if (proType == ProType.producer) {
@@ -77,18 +79,18 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
   @override
   Widget build(BuildContext context) {
     final ModelNotifier modelNotifier =
-        Provider.of<ModelNotifier>(context, listen: false);
+    Provider.of<ModelNotifier>(context, listen: false);
 
     AssetImage getImage() {
       switch (proType) {
         case ProType.producer:
-          return const AssetImage('assets/images/producer.jpg');
+          return const AssetImage('assets/images/p2.jpg');
           break;
         case ProType.session:
-          return const AssetImage('assets/images/session.jpg');
+          return const AssetImage('assets/images/tm.jpg');
           break;
         case ProType.mixing:
-          return const AssetImage('assets/images/mixing.jpg');
+          return const AssetImage('assets/images/mm.jpg');
           break;
         case ProType.all:
           return const AssetImage('assets/images/producer_detail.png');
@@ -135,10 +137,10 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                         proType == ProType.producer
                             ? 'Top Producers'
                             : proType == ProType.session
-                                ? 'Tracking Musicians'
-                                : proType == ProType.mixing
-                                    ? 'Hit Standard Pros'
-                                    : 'Finish that Song',
+                            ? 'Tracking Musicians'
+                            : proType == ProType.mixing
+                            ? 'Hit Standard Pros'
+                            : 'Finish that Song',
                         style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Roboto',
@@ -151,10 +153,10 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                           proType == ProType.producer
                               ? 'Hire top producers ready to make a hit out of your song idea'
                               : proType == ProType.session
-                                  ? 'Hand-picked musicians to record custom tracks on your song'
-                                  : proType == ProType.mixing
-                                      ? 'Hire hit-making mixing engineers to transform your recorded tracks into radio-ready songs'
-                                      : 'Find your next music production professional to work with',
+                              ? 'Hand-picked musicians to record custom tracks on your song'
+                              : proType == ProType.mixing
+                              ? 'Hire hit-making mixing engineers to transform your recorded tracks into radio-ready songs'
+                              : 'Find your next music production professional to work with',
                           style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'OpenSans',
@@ -200,25 +202,25 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                               value: value,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                                const EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(value),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
-                              switch (value.toString()) {
+                              switch (value) {
                                 case 'All Production Pros':
-                                  modelNotifier.proType = ProType.all;
+                                  proType = ProType.all;
                                   break;
                                 case 'Music Producers':
-                                  modelNotifier.proType = ProType.producer;
+                                  proType = ProType.producer;
                                   break;
                                 case 'Session Musicians':
-                                  modelNotifier.proType = ProType.session;
+                                  proType = ProType.session;
                                   break;
                                 case 'Mixing & Mastering':
-                                  modelNotifier.proType = ProType.mixing;
+                                  proType = ProType.mixing;
                                   break;
                               }
                               dropdownValue = value.toString();
@@ -236,9 +238,9 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
           Expanded(
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
-                itemCount: producers.length,
+                itemCount: modelNotifier.producersList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Producer pro = producers[index];
+                  final pro = modelNotifier.producersList[index];
                   return Stack(
                     children: [
                       Container(
@@ -258,11 +260,11 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         width: 120,
@@ -288,7 +290,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         '\$${pro.price.toString()}',
@@ -306,7 +308,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
+                                const EdgeInsets.symmetric(vertical: 2),
                                 child: _buildRatingStars(pro.rating),
                               ),
                               CreditsPill.generateCreditPill(pro.credits, 3, 22)
@@ -330,12 +332,19 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                               ]),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.0),
-                            child: Image(
-                              filterQuality: FilterQuality.low,
-                              width: 110,
-                              image: AssetImage(pro.imageUrl),
-                              fit: BoxFit.cover,
-                            ),
+                            child: pro.imageUrl != null
+                                ? CachedNetworkImage(
+                                    filterQuality: FilterQuality.low,
+                                    width: 110,
+                                    placeholder: (context, loading) {
+                                      return Center(
+                                          child: SpinKitChasingDots(
+                                        color: kSecondaryColour,
+                                      ));
+                                    },
+                                    fit: BoxFit.cover,
+                                    imageUrl: pro.imageUrl)
+                                : Container(),
                           ),
                         ),
                       )

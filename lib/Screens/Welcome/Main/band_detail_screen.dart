@@ -8,7 +8,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../components/normal_roundedbutton.dart';
+import '../../../components/normal_rounded_button.dart';
 import '../../../components/pill_button.dart';
 import '../../Welcome/Main/PostGig/post_gig_screen.dart';
 

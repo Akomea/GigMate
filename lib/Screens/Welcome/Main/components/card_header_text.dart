@@ -3,18 +3,15 @@ import 'package:gigmate/constants.dart';
 
 class CardHeaderText extends StatelessWidget {
   final String leading;
-  final IconData trailing;
+  final Widget trailing;
 
-  const CardHeaderText({this.leading, this.trailing});
+  CardHeaderText({this.leading, this.trailing});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ListTile(
-        trailing: Icon(
-          trailing,
-          color: kAccent,
-        ),
+        trailing: trailing,
         title: Text(leading, style: kHeaderStyle2),
       ),
     );

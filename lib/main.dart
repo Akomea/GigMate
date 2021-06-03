@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import './Screens/./Welcome/./Main/places_screen.dart';
 import './Screens/Welcome/Main/band_detail_screen.dart';
 import './Screens/Welcome/Main/solo_detail_screen.dart';
+import 'Screens/Welcome/Main/band_detail_screen_v2.dart';
 import 'Screens/Welcome/Main/home_screen.dart';
 import 'Screens/Welcome/Main/studio_main_screen.dart';
 import 'Screens/Welcome/welcome_screen.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider<ConnectivityStatus>(
           create: (context) =>
-          ConnectivityService().connectionStatusController.stream,
+              ConnectivityService().connectionStatusController.stream,
         )
       ],
       child: MaterialApp(
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
           StudioMainScreen.screenId: (context) => StudioMainScreen(),
           PlacesScreen.screenId: (context) => PlacesScreen(),
           MusiciansMainScreen.screenId: (context) => MusiciansMainScreen(),
+          BandDetailScreen.screenId: (context) => BandDetailScreen(),
         },
       ),
     );

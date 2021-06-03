@@ -20,6 +20,7 @@ class CategoriesWidget extends StatelessWidget {
             padding: EdgeInsets.zero,
             splashColor: kSecondaryColour,
             onPressed: () {
+              modelNotifier.musicianType = MusicianType.band;
               Navigator.pushNamed(context, MusiciansMainScreen.screenId);
             },
             child: PostGigCategoryCircleContainer(
@@ -31,6 +32,7 @@ class CategoriesWidget extends StatelessWidget {
             padding: EdgeInsets.zero,
             splashColor: kSecondaryColour,
             onPressed: () {
+              modelNotifier.musicianType = MusicianType.soloist;
               Navigator.pushNamed(context, MusiciansMainScreen.screenId);
             },
             child: PostGigCategoryCircleContainer(

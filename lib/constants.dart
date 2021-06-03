@@ -46,10 +46,8 @@ const kQuestionStyle = TextStyle(
     color: kPurpleTextColour);
 const kNotifiedTextStyle =
     TextStyle(color: kAccent, fontWeight: FontWeight.bold);
-const kHeaderStyle2 = TextStyle(
-    fontFamily: 'Playfair',
-    fontWeight: FontWeight.w500,
-    color: kPurpleTextColour);
+const kHeaderStyle2 =
+    TextStyle(fontFamily: 'Playfair', fontSize: 17, color: kPurpleTextColour);
 const kHeaderStyle3 = TextStyle(
     fontFamily: 'Playfair', fontWeight: FontWeight.w500, color: kPrimaryColour);
 
