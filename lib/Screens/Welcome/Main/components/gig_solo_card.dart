@@ -52,9 +52,8 @@ class GigSoloCard extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
-            FlatButton(
+            TextButton(
               onPressed: onTap,
-              splashColor: kSecondaryColour.withOpacity(0.3),
               child: Container(
                 child: Column(
                   children: [
@@ -85,7 +84,7 @@ class GigSoloCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      margin: EdgeInsets.only(top: 170),
+                      margin: EdgeInsets.only(top: _size.height*0.25),
                       padding: EdgeInsets.all(1),
                     ),
                   ],

@@ -44,7 +44,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ],
           ),
           Container(
-            height: _size.height * 0.765,
+            height: _size.height * 0.730,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -159,8 +159,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       children: [
                         Align(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 80, horizontal: 20),
+                            padding: EdgeInsets.symmetric(
+                                vertical: _size.height*0.2, horizontal: 20),
                             child: Column(
                               children: [
                                 RichText(

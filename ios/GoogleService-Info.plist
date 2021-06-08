@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>662256136925-nvqmrb6p0kgsn4v8phk9v3lk6lndurah.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.662256136925-nvqmrb6p0kgsn4v8phk9v3lk6lndurah</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBvekPOCzLxS9uCiHUrKX-7euFZjWfobBk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>662256136925</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Akkensoft.gigmate</string>
+	<key>PROJECT_ID</key>
+	<string>gigmate-77896</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gigmate-77896.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:662256136925:ios:435a589d22b42c67de6134</string>
+	<key>DATABASE_URL</key>
+	<string>https://gigmate-77896.firebaseio.com</string>
+</dict>
+</plist>

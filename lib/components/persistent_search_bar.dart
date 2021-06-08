@@ -44,8 +44,8 @@ class BuildSearchBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: kPurpleTextColour,
-            blurRadius: 35,
-            spreadRadius: -14,
+            blurRadius: 30,
+            spreadRadius: -19,
           ),
         ],
         borderRadius: BorderRadius.circular(29),

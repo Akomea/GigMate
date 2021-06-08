@@ -18,8 +18,7 @@ class ProGigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      padding: EdgeInsets.zero,
+    return TextButton(
       onPressed: onTap,
       child: Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
@@ -46,7 +45,7 @@ class ProGigCard extends StatelessWidget {
               color: Colors.black.withOpacity(0.7),
             ),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            margin: EdgeInsets.only(top: 150),
+            margin: EdgeInsets.only(top: _size.height*0.22),
             child: Column(
               children: [
                 Align(

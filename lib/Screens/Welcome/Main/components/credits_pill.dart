@@ -28,11 +28,11 @@ class CreditsPill extends StatelessWidget {
   }
 
   static Widget getCredits(List credits, double padding, double height) {
-    List<CreditsPill> creditList;
+    List<CreditsPill> creditList =[];
     for (String credit in credits) {
-      creditList.add(new CreditsPill(
-        name: credit.toString(),
-      ));
+        creditList.add(CreditsPill(
+          name: credit.toString(),
+        ));
     }
     return Row(children: creditList);
   }
