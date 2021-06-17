@@ -78,6 +78,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size _size = MediaQuery.of(context).size;
     final ModelNotifier modelNotifier =
     Provider.of<ModelNotifier>(context, listen: false);
 
@@ -236,16 +237,16 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
-                padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: ListView.separated(
+                padding: EdgeInsets.only(top: _size.height*0.02, bottom: 10),
                 itemCount: modelNotifier.producersList.length,
                 itemBuilder: (BuildContext context, int index) {
                   final pro = modelNotifier.producersList[index];
                   return Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(30.0, 5.0, 20.0, 5.0),
-                        height: MediaQuery.of(context).size.height * 0.18,
+                        margin: EdgeInsets.fromLTRB(_size.width*0.17, 5.0, 20.0, 5.0),
+                        height: MediaQuery.of(context).size.height * 0.16,
                         width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -317,9 +318,10 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                         ),
                       ),
                       Positioned(
-                        left: 10,
-                        top: 5,
-                        bottom: 5.0,
+                        left: _size.width * 0.05,
+                        right: _size.width * 0.633,
+                        top: _size.height*0,
+                        bottom: _size.height * 0,
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
@@ -350,7 +352,7 @@ class _StudioMainScreenState extends State<StudioMainScreen> {
                       )
                     ],
                   );
-                }),
+                }, separatorBuilder: (BuildContext context, int index) { return SizedBox(height: _size.height*0.02); },),
           )
         ],
       ),

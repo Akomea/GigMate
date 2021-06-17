@@ -95,7 +95,7 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
-    const double _filterContainerHeight = 55.0;
+     double _filterContainerHeight = _size.height*0.067;
     final ModelNotifier modelNotifier =
         Provider.of<ModelNotifier>(context, listen: true);
     return Scaffold(
@@ -156,7 +156,7 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
                 Positioned(
                   left: _size.width * 0.10,
                   right: _size.width * 0.10,
-                  top: 200,
+                  top: _size.height*0.29,//filter selector height
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -226,8 +226,8 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: ListView.separated(
+                padding: const EdgeInsets.only(bottom: 30),
                 itemCount: selectedCategory == Category.bands
                     ? modelNotifier.liveBandList.length
                     : modelNotifier.soloMusicianList.length,
@@ -252,8 +252,8 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
                       children: [
                         Container(
                           margin:
-                              const EdgeInsets.fromLTRB(30.0, 5.0, 20.0, 5.0),
-                          height: MediaQuery.of(context).size.height * 0.18,
+                               EdgeInsets.fromLTRB(_size.width*0.17, 5.0, 20.0, 5.0),
+                          height: MediaQuery.of(context).size.height * 0.17,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -339,9 +339,10 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
                           ),
                         ),
                         Positioned(
-                          left: 10,
-                          top: 5,
-                          bottom: 5.0,
+                          left: _size.width*0.05,
+                          right: _size.width*0.63,
+                          top: _size.height*0.0,
+                          bottom: _size.height*0.0,
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),
@@ -385,7 +386,7 @@ class _MusiciansMainScreenState extends State<MusiciansMainScreen> {
                       ],
                     ),
                   );
-                }),
+                }, separatorBuilder: (BuildContext context, int index) { return SizedBox(height: _size.height*0.02); },),
           )
         ],
       ),
@@ -424,7 +425,8 @@ class FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double _filterContainerHeight = 55.0;
+    Size _size = MediaQuery.of(context).size;
+    double _filterContainerHeight = _size.height*0.067;
     return Container(
         height: _filterContainerHeight,
         decoration: BoxDecoration(

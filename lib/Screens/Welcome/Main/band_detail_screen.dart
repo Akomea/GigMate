@@ -42,7 +42,7 @@ class _DetailScreenState extends State<DetailScreen>
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
-    double _bottomContainerHeight = 60;
+    double _bottomContainerHeight = 80;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(

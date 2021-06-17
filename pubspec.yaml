@@ -59,6 +59,7 @@ dependencies:
   flutter_cache_manager: ^2.1.1
   cached_network_image: ^2.5.0
   lint: ^1.0.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

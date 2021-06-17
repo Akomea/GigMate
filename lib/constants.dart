@@ -70,3 +70,4 @@ const kHintTextDecoration = InputDecoration(
 const double kBudgetButtonHeight = 0.055;
 const double kBudgetButtonWidth = 0.13;
 const double kGigSoloCardContainerHeight = 0.35;
+

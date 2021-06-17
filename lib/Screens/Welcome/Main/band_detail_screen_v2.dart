@@ -37,7 +37,7 @@ class _BandDetailScreenState extends State<BandDetailScreen>
   bool _playPause = false;
   ScrollController _scrollController;
 
-  final double _initialSheetChildSize = 0.6;
+   double _initialSheetChildSize=0;
   double _dragScrollSheetExtent = 0;
   double _widgetHeight = 0;
   double _fabPosition = 0;
@@ -56,6 +56,7 @@ class _BandDetailScreenState extends State<BandDetailScreen>
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
+    _initialSheetChildSize=_size.height*0.0006;
     const double _bottomContainerHeight = 60;
     connectionStatus = Provider.of<ConnectivityStatus>(context);
     final ModelNotifier modelNotifier =
@@ -229,7 +230,7 @@ class _BandDetailScreenState extends State<BandDetailScreen>
             child: DraggableScrollableSheet(
               minChildSize: _initialSheetChildSize,
               initialChildSize: _initialSheetChildSize,
-              maxChildSize: 0.85,
+              maxChildSize: _size.height*0.0008,
               builder: (context, controller) {
                 _scrollController = controller;
                 return ClipRRect(
@@ -359,7 +360,7 @@ class _BandDetailScreenState extends State<BandDetailScreen>
             ),
           ),
           Positioned(
-            bottom: _fabPosition - _size.height * 0.09,
+            bottom: _fabPosition - _size.height * 0.07,
             left: _size.width * 0.05,
             child: Container(
                 width: _size.width * 0.9,
@@ -454,9 +455,10 @@ class _BandDetailScreenState extends State<BandDetailScreen>
               alignment: Alignment.bottomCenter,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
+                margin: EdgeInsets.only(bottom: _size.height*0.02),
                 width: double.infinity,
-                height: _bottomContainerHeight + 10,
-                color: Colors.white.withOpacity(0.7),
+                height: _bottomContainerHeight + 20,
+                color: Colors.white.withOpacity(0.2),
                 child: NormalRoundedButton(
                     bgColour: kSecondaryColour,
                     buttonText: 'Contact ${modelNotifier.currentLiveBand.name}',

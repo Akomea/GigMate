@@ -14,7 +14,7 @@ class CreditsPill extends StatelessWidget {
       decoration: BoxDecoration(
           color: kInactiveColour.withOpacity(0.2),
           borderRadius: const BorderRadius.all(Radius.circular(10))),
-      margin: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: 10, bottom: 4),
       padding: EdgeInsets.all(padding),
       height: pillHeight,
       child: Text(
@@ -51,7 +51,7 @@ class CreditsPill extends StatelessWidget {
         ));
       }
     }
-    return Row(
+    return Wrap(
       children: pills,
     );
   }

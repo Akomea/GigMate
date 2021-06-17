@@ -30,6 +30,7 @@ class GigCard extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            color: Colors.black.withOpacity(0.1),
             image: DecorationImage(
               fit: BoxFit.cover,
               image: NetworkImage(imageUrl),

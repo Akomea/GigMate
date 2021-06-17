@@ -364,7 +364,7 @@ class _SoloDetailScreenState extends State<SoloDetailScreen>
             ),
           ),
           Positioned(
-            bottom: _fabPosition - _size.height * 0.09,
+            bottom: _fabPosition - _size.height * 0.07,
             left: _size.width * 0.05,
             child: Container(
                 width: _size.width * 0.9,

@@ -17,7 +17,6 @@ import 'band_detail_screen_v2.dart';
 import 'musicians_main_screen.dart';
 import 'places_screen.dart';
 import 'solo_detail_screen.dart';
-
 class ExploreScreen extends StatefulWidget {
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
@@ -301,6 +300,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   final ModelApi _modelApi = ModelApi();
+  bool isLoading;
 
   @override
   void initState() {
