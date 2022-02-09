@@ -1,26 +1,17 @@
-import 'dart:ui';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gigmate/Screens/Welcome/Login/login_screen.dart';
-import 'package:gigmate/Screens/Welcome/Main/musicians_main_screen.dart';
-import 'package:gigmate/Screens/Welcome/welcome_screen.dart';
-import 'package:gigmate/model_notifier.dart';
-import 'package:gigmate/post_gig_notifier.dart';
-import 'package:gigmate/services/connectivity_service.dart';
-import 'package:gigmate/services/firestorage_service.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gigmate/routes.dart';
+import 'package:gigmate/core/providers/model_notifier.dart';
+import 'package:gigmate/core/providers/post_gig_notifier.dart';
+import 'package:gigmate/core/services/connectivity_service.dart';
+import 'package:gigmate/core/services/firestorage_service.dart';
+import 'package:gigmate/ui/screens/onboarding/welcome_screen.dart';
 import 'package:provider/provider.dart';
-
-import './Screens/./Welcome/./Main/places_screen.dart';
-import './Screens/Welcome/Main/band_detail_screen.dart';
-import './Screens/Welcome/Main/solo_detail_screen.dart';
-import 'Screens/Welcome/Main/band_detail_screen_v2.dart';
-import 'Screens/Welcome/Main/home_screen.dart';
-import 'Screens/Welcome/Main/studio_main_screen.dart';
-import 'Screens/Welcome/welcome_screen.dart';
-import 'constants.dart';
-import 'enum/connectivity_status.dart';
-import 'user_auth.dart';
+import 'ui/screens/home/app_navigation_home.dart';
+import 'utils/constants.dart';
+import 'package:gigmate/utils/enums.dart';
+import 'core/providers/user_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,28 +43,22 @@ class MyApp extends StatelessWidget {
               ConnectivityService().connectionStatusController.stream,
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'GigMate',
-        theme: ThemeData(
-            primaryColor: kPrimaryColour,
-            scaffoldBackgroundColor: Colors.white,
-            accentColor: kAccent,
-            textTheme: TextTheme(
-                bodyText2: TextStyle(
-                    fontFamily: 'Roboto',
-                    color: Colors.black.withOpacity(0.6)))),
-        initialRoute: HomeScreen.screenId,
-        routes: {
-          WelcomeScreen.screenId: (context) => WelcomeScreen(),
-          LoginScreen.screenId: (context) => LoginScreen(),
-          HomeScreen.screenId: (context) => HomeScreen(),
-          DetailScreen.screenId: (context) => DetailScreen(),
-          SoloDetailScreen.screenId: (context) => SoloDetailScreen(),
-          StudioMainScreen.screenId: (context) => StudioMainScreen(),
-          PlacesScreen.screenId: (context) => PlacesScreen(),
-          MusiciansMainScreen.screenId: (context) => MusiciansMainScreen(),
-          BandDetailScreen.screenId: (context) => BandDetailScreen(),
+      child: ScreenUtilInit(
+        designSize: Size(325,667),
+        builder:() {
+         return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'GigMate',
+            theme: ThemeData(
+                primaryColor: kPrimaryColour,
+                scaffoldBackgroundColor: Colors.white,
+                textTheme: TextTheme(
+                    bodyText2: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Colors.black.withOpacity(0.6))), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kAccent)),
+            home: WelcomeScreen(),
+            routes: PageRoutes().routes()
+          );
         },
       ),
     );
