@@ -2,12 +2,10 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gigmate/routes.dart';
 import 'package:gigmate/ui/widgets/card_header_text.dart';
 import 'package:gigmate/ui/widgets/gig_solo_card.dart';
 import 'package:gigmate/ui/widgets/pro_gig_card.dart';
-import 'package:gigmate/ui/screens/others/studio_main_screen.dart';
 import 'package:gigmate/ui/widgets/gig_card.dart';
 import 'package:gigmate/ui/widgets/persistent_search_bar.dart';
 import 'package:gigmate/core/models/model_api.dart';
@@ -19,14 +17,15 @@ import '../../../utils/constants.dart';
 import '../others/band_detail_screen_v2.dart';
 import '../others/musicians_main_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-class ExploreScreen extends StatefulWidget {
+class ExploreScreen extends StatefulWidget  {
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+class _ExploreScreenState extends State<ExploreScreen> with AutomaticKeepAliveClientMixin<ExploreScreen>{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final Size _size = MediaQuery
         .of(context)
         .size;
@@ -62,7 +61,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ],
                 ),
                 Container(
-                  height: _size.height * 0.72,
+                  height: _size.height * 0.77,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -98,11 +97,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 var _band = modelNotifier.liveBandList[index];
                                 return InkWell(
+                                  key: ValueKey(
+                                    _band.name
+                                  ),
                                   onTap: () {
                                     modelNotifier.currentLiveBand =
                                     modelNotifier.liveBandList[index];
                                     Navigator.pushNamed(
-                                        context, BandDetailScreen2.screenId);
+                                        context, PageRoutes.band_detail2);
                                   },
                                   child: GigCard(
                                     size: _size,
@@ -166,7 +168,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           trailing: null,
                         ),
                         Container(
-                          margin: EdgeInsets.only(bottom: _size.height * 0.02),
+                          margin: EdgeInsets.only(bottom: _size.height * 0.01),
                           width: _size.width * 0.95,
                           height: _size.height * 0.60,
                           decoration: BoxDecoration(
@@ -256,34 +258,27 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             ],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          margin: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            //Card category text
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Music Production Pros',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: kPurpleTextColour,
-                                      fontFamily: 'PlayFair')),
-                              Icon(
-                                Icons.arrow_right_alt,
-                                color: kAccent,
-                              )
-                            ],
+                        CardHeaderText(
+                          leading: 'Music Production',
+                          trailing: InkWell(
+                            onTap: () =>
+                                Navigator.pushNamed(context, PageRoutes.studio_main),
+                            child: Text('SEE ALL',
+                                style: TextStyle(
+                                  color: kAccent,
+                                )),
                           ),
                         ),
                         Container(
-                          height: _size.height * 0.40,
+                          padding: EdgeInsets.only(bottom: 30),
+                          height: _size.height * 0.35,
                           child: CarouselSlider(
                               items: [
                                 ProGigCard(
                                   onTap: () {
                                     modelNotifier.proType = ProType.producer;
                                     Navigator.pushNamed(
-                                        context, StudioMainScreen.screenId);
+                                        context, PageRoutes.studio_main);
                                   },
                                   size: _size,
                                   imageUrl: 'assets/images/producer.jpg',
@@ -295,7 +290,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   onTap: () {
                                     modelNotifier.proType = ProType.session;
                                     Navigator.pushNamed(
-                                        context, StudioMainScreen.screenId);
+                                        context, PageRoutes.studio_main);
                                   },
                                   size: _size,
                                   imageUrl: 'assets/images/session.jpg',
@@ -308,7 +303,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   onTap: () {
                                     modelNotifier.proType = ProType.mixing;
                                     Navigator.pushNamed(
-                                        context, StudioMainScreen.screenId);
+                                        context, PageRoutes.studio_main);
                                   },
                                   size: _size,
                                   imageUrl: 'assets/images/mixing.jpg',
@@ -318,7 +313,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 ),
                               ],
                               options: CarouselOptions(
-                                height: _size.height * 0.36,
+                                height: _size.height * 0.30,
                               )),
                         ),
                       ],
@@ -556,6 +551,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class ShimmerSeeAll extends StatelessWidget {

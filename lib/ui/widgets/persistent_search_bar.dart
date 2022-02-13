@@ -38,7 +38,7 @@ class BuildSearchBar extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           vertical: _size.height * 0.025, horizontal: _size.width * 0.025),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 3),
-      width: _size.width * 0.95,
+      width: _size.width * 0.90,
       height: _size.height * 0.06,
       decoration: BoxDecoration(
         boxShadow: [

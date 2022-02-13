@@ -52,6 +52,7 @@ class _AppNavScreenState extends State<AppNavScreen> {
     // Size _size = MediaQuery.of(context).size;
     return Scaffold(
       body: PageView(
+        key: PageStorageKey(123),
         controller: _pageController,
         children: _screens,
         onPageChanged: _onPageChanged,

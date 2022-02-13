@@ -27,7 +27,7 @@ class NormalRoundedButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(29),
         child: FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
           color: bgColour,
           onPressed: onPressed,
           child: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gigmate/routes.dart';
 import 'package:gigmate/ui/widgets/category_circle_container.dart';
 import 'package:gigmate/ui/screens/others/musicians_main_screen.dart';
 import 'package:gigmate/ui/screens/others/places_screen.dart';
@@ -18,7 +19,7 @@ class CategoriesWidget extends StatelessWidget {
           TextButton(
             onPressed: () {
               modelNotifier.musicianType = MusicianType.band;
-              Navigator.pushNamed(context, MusiciansMainScreen.screenId);
+              Navigator.pushNamed(context, PageRoutes.musicians_main);
             },
             child: PostGigCategoryCircleContainer(
               imageUrl: 'assets/icons/band.svg',
@@ -29,7 +30,7 @@ class CategoriesWidget extends StatelessWidget {
           TextButton(
             onPressed: () {
               modelNotifier.musicianType = MusicianType.soloist;
-              Navigator.pushNamed(context, MusiciansMainScreen.screenId);
+              Navigator.pushNamed(context, PageRoutes.musicians_main);
             },
             child: PostGigCategoryCircleContainer(
               imageUrl: 'assets/icons/saxophonist.svg',
@@ -40,7 +41,7 @@ class CategoriesWidget extends StatelessWidget {
           TextButton(
             onPressed: () {
               modelNotifier.proType = ProType.all;
-              Navigator.pushNamed(context, StudioMainScreen.screenId);
+              Navigator.pushNamed(context, PageRoutes.studio_main);
             },
             child: PostGigCategoryCircleContainer(
               imageUrl: 'assets/icons/studio.svg',
@@ -51,7 +52,7 @@ class CategoriesWidget extends StatelessWidget {
           SizedBox(width: 10),
           TextButton(
             onPressed: () =>
-                Navigator.pushNamed(context, PlacesScreen.screenId),
+                Navigator.pushNamed(context, PageRoutes.places),
             child: PostGigCategoryCircleContainer(
               imageUrl: 'assets/icons/concert.svg',
               iconWidth: 55,

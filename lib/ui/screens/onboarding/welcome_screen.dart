@@ -22,13 +22,16 @@ class WelcomeScreen extends StatelessWidget {
     child: Column(
     mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AnimatedTextKit(
-          animatedTexts: [
-            FadeAnimatedText('Welcome',textStyle: kHeaderStyle),
-            FadeAnimatedText('Hire A Musician.',textStyle: kHeaderStyle),
-            FadeAnimatedText('Book A Band.',textStyle: kHeaderStyle),
-            FadeAnimatedText('And More...',textStyle: kHeaderStyle),
-          ],
+        Container(
+          height: 50,
+          child: AnimatedTextKit(
+            animatedTexts: [
+              FadeAnimatedText('Welcome',textStyle: kHeaderStyle),
+              FadeAnimatedText('Hire A Musician.',textStyle: kHeaderStyle),
+              FadeAnimatedText('Book A Band.',textStyle: kHeaderStyle),
+              FadeAnimatedText('And More...',textStyle: kHeaderStyle),
+            ],
+          ),
         ),
         Image.asset(
           'assets/images/logo1.png',
