@@ -6,11 +6,4 @@ A flutter app to help users find musicians
 
 This project is serverless and uses the Provider Package for State Management
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![gig3](https://user-images.githubusercontent.com/13130164/203653717-3dfd1b11-b3ca-4e1e-99e4-92baa12bac7c.jpeg)
